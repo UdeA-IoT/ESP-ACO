@@ -371,18 +371,41 @@ flowchart LR
 
 En terminos de Estigmergia en teminos humanos, un ejemplo puede verse en el Manual Valve [[ES]](https://media.steampowered.com/apps/valve/hbook-ES.pdf) [[EN]](https://cdn.akamai.steamstatic.com/apps/valve/Valve_NewEmployeeHandbook.pdf) de Valve Corporation [[link]](https://en.wikipedia.org/wiki/Valve_Corporation).
 
-### Simuladores online
 
 ## Simuladores de Estigmergia
 
-### Online
+### Estigmergia en GitHub — por categoría
 
-| Simulador | Descripción / Modelo | Enlace de Acceso |
-| :--- | :--- | :--- |
-| **NetLogo Web (Ants)** | El clásico modelo de recolección de comida de hormigas. Permite ajustar la tasa de evaporación y difusión de las feromonas en tiempo real desde el navegador. | [Simular en NetLogo Web](https://netlogoweb.org/launch#http://netlogoweb.org/assets/models/Sample%20Models/Biology/Ants.nlogo) |
-| **NetLogo Web (Termites)** | Simulación de estigmergia cualitativa basada en termitas que recolectan astillas de madera. No usan feromonas, sino que modifican el entorno amontonando bloques siguiendo reglas simples. | [Simular en NetLogo Web](https://netlogoweb.org/launch#http://netlogoweb.org/assets/models/Sample%20Models/Biology/Termites.nlogo) |
-| **ACO Simulator (GitHub Pages)** | Simulador interactivo en JavaScript del algoritmo de Optimización de Colonias de Hormigas enfocado en resolver el Problema del Viajero del Comercio (TSP). Permite ver visualmente los caminos de feromona. | [Abrir ACO Simulator](https://thiagodnf.github.io/aco-simulator/) |
-| **NetLogo Web (Vants)** | Una variante de autómatas celulares (similar a la Hormiga de Langton) orientada a la creación de patrones estigmérgicos en una cuadrícula a través de marcas de color. | [Simular en NetLogo Web](https://www.netlogoweb.org/launch#http://netlogoweb.org/assets/models/Sample%20Models/Computer%20Science/Vants.nlogo) |
+#### Simulación de clustering y sorting (los más relevantes para tu proyecto)
+
+| Repositorio | Lenguaje | Qué hace | Relevancia |
+|---|---|---|---|
+| [m-abdulhak/SwarmJS](https://github.com/m-abdulhak/SwarmJS) | JavaScript | Plataforma 2D completa: clustering, sorting de objetos, feromona, construcción. Corre en el browser. | ⭐ Muy alta — replica directamente los experimentos del paper |
+| [denkovarik/Ant-Clustering](https://github.com/denkovarik/Ant-Clustering) | Python | Algoritmo de clustering por similitud inspirado en Deneubourg. Objetos rojos y azules, agentes con probabilidad de pick/drop. | ⭐ Muy alta — implementa el modelo Deneubourg 1991 que cita el paper |
+| [Elmosnewshoes/Stigmergy](https://github.com/Elmosnewshoes/Stigmergy) | Python | Plataforma "theANT3000": simulador swarm completo basado explícitamente en estigmergia, con GUI | Alta |
+| [mlpi-unipi/sfe](https://github.com/mlpi-unipi/sfe) | Python | Stigmergy + flocking para búsqueda distribuida de objetivos | Media-Alta |
+
+#### Simulación de feromona y foraging
+
+| Repositorio | Lenguaje | Qué hace | Relevancia |
+|---|---|---|---|
+| [Melell/Ant-Colony-Simulation](https://github.com/Melell/Ant-Colony-Simulation) | C# (Unity) | Foraging con feromona de casa/comida, evaporación, paredes dinámicas. Etiquetado explícitamente como "stigmergy" | Alta |
+| [jeffasante/ant-colony-rl](https://github.com/jeffasante/ant-colony-rl) | JavaScript | Colonia de hormigas con Q-learning + feromona, visualización en tiempo real | Media |
+| [naummo/swarm_maze_opencl_solver](https://github.com/naummo/swarm_maze_opencl_solver) | Python/OpenCL | Swarm estigmérgico en GPU para mapeo de laberintos (acelerado por paralelismo) | Media |
+
+#### Hardware / ESP32
+
+| Repositorio | Lenguaje | Qué hace | Relevancia |
+|---|---|---|---|
+| [lnicooo/swarm](https://github.com/lnicooo/swarm) | C++ (Arduino) | Swarm robots con ESP32 | Alta — mismo hardware que el tuyo |
+
+#### Simuladores generales de swarm (estigmergia como mecanismo interno)
+
+| Repositorio | Lenguaje | Qué hace | Relevancia |
+|---|---|---|---|
+| [ilpincy/argos3](https://github.com/ilpincy/argos3) | C++ | Simulador físico paralelo para swarms de cientos de robots (e-puck, foot-bot, Kilobot) | Alta para validación |
+| [tidota/swarm-argos](https://github.com/tidota/swarm-argos) | C++ | Formación de caminos en entorno desconocido sobre ARGoS | Media |
+
 
 ### Combinados
 
@@ -396,3 +419,12 @@ En terminos de Estigmergia en teminos humanos, un ejemplo puede verse en el Manu
 | **ARGoS3** | Desktop (Linux/Mac) | Física real, swarms de cientos de robots, modelos e-puck/foot-bot | Muy alta — el simulador más usado en literatura de swarm con estigmergia | [github.com/ilpincy/argos3](https://github.com/ilpincy/argos3) |
 | **Webots** | Desktop (multiplataforma) | Física completa, robots reales modelados, comportamiento colectivo | Alta — útil para validar comportamiento cercano a hardware real | [cyberbotics.com](https://cyberbotics.com) |
 | **NetLogo desktop** | Desktop (Java) | Agent-based modeling general, modelos de hormigas, clustering, sorting | Alta — plataforma sobre la que se construyeron simulaciones del linaje Deneubourg | [ccl.northwestern.edu/netlogo](https://ccl.northwestern.edu/netlogo/) |
+
+## Repos
+
+| Recurso | Descripción | Tipo | Enlace |
+|---|---|---|---|
+| BruJu/Ants | Implementación directa del modelo de Deneubourg en HTML, con demo en vivo | GitHub | [github.com/BruJu/Ants](https://github.com/BruJu/Ants) |
+| BruJu/Ants demo | Simulación corriendo en el navegador | Demo | [bruju.github.io/Ants](https://bruju.github.io/Ants/) |
+| denkovarik/Ant-Clustering | Algoritmo de clustering por hormigas en Python con objetos de dos colores | GitHub | [github.com/denkovarik/Ant-Clustering](https://github.com/denkovarik/Ant-Clustering) |
+| SwarmJS | Plataforma 2D de swarm robotics en el navegador, soporta sorting, clustering y foraging | GitHub | [github.com/m-abdulhak/SwarmJS](https://github.com/m-abdulhak/SwarmJS) |
