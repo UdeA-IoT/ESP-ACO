@@ -5,11 +5,12 @@
 
 ## 1. Definición de estigmergia
 
-Concepto introducido por **Grassé (1959)** para explicar el comportamiento constructor de las termitas.
+Concepto introducido por **[Grassé](https://es.wikipedia.org/wiki/Pierre-Paul_Grass%C3%A9) (1959)** para explicar el comportamiento constructor de las termitas.
 
-> [!QUOTE]
+> [!IMPORTANT]
 > *"La coordinación de tareas y la regulación de las construcciones no depende directamente de los obreros, sino de las construcciones mismas. El obrero no dirige su trabajo, sino que es guiado por él."*
 > — Grassé, 1959
+
 
 > [!TIP]
 > **Definición operacional:** Estigmergia es la influencia sobre el comportamiento de un agente que ejercen los **efectos persistentes en el entorno** producidos por comportamientos previos. El entorno acumula "memoria" de las acciones pasadas, y esa memoria guía las acciones futuras — sin coordinación directa entre agentes.
@@ -28,6 +29,18 @@ flowchart LR
     style D fill:#E8A838,color:#fff
 ```
 
+La estigmergia funciona a través de un ciclo de interacción con el entorno:
+* Un agente realiza un "trabajo" (como depositar material de construcción) en una ubicación específica
+* Esta acción modifica la entrada sensorial que se obtendrá en ese lugar en el futuro. 
+* Dicho cambio ambiental estimula o modifica el comportamiento posterior de otros agentes (o del mismo) en ese sitio
+
+Las fuentes modernas amplían esta definición: la estigmergia no solo se refiere a "trabajo" físico, sino a cualquier cambio ambiental producido por un animal, incluyendo el rastro de feromonas de las hormigas. Algunos ejemplos:
+1. Rastros de feromonas en hormigas
+2. Construcción de termitero.
+3. Caminos peatonales.
+4. Wikipedia.
+5. Cafeteria.
+
 > [!IMPORTANT]
 > No hay comunicación directa agente→agente. El entorno es el único canal. Esto es lo que distingue la estigmergia de la coordinación explícita.
 
@@ -35,17 +48,17 @@ flowchart LR
 
 ## 2. Taxonomía: estigmergia activa vs. pasiva
 
-Holland & Melhuish refinan el concepto identificando **tres mecanismos** por los que el entorno modificado puede afectar el comportamiento posterior:
+La estigmergia se puede clasificar principalmente según la manera en que el cambio ambiental afecta el comportamiento o el resultado de las acciones de los agentes. Se distinguen tres categorías funcionales que luego se agrupan en dos tipos generales: **activa** y **pasiva**.
 
 ```mermaid
 flowchart TD
-    ROOT["Estigmergia\n(efecto de acciones pasadas)"]
-    ROOT --> ACTIVA["🟢 ACTIVA\nAfecta al agente mismo"]
-    ROOT --> PASIVA["🟠 PASIVA\nAfecta solo el resultado"]
+    ROOT["Estigmergia<br>(efecto de acciones pasadas)"]
+    ROOT --> ACTIVA["🟢 ACTIVA<br>Afecta al agente mismo"]
+    ROOT --> PASIVA["🟠 PASIVA<br>Afecta solo el resultado"]
 
-    ACTIVA --> I["(i) Efecto cualitativo\nCambia la ELECCIÓN de acción"]
-    ACTIVA --> II["(ii) Efecto cuantitativo\nCambia los PARÁMETROS de la acción"]
-    PASIVA --> III["(iii) Efecto sobre el resultado\nLa acción es la misma,\nel outcome es distinto"]
+    ACTIVA --> I["(i) Efecto cualitativo<br>Cambia la ELECCIÓN de <br>acción"]
+    ACTIVA --> II["(ii) Efecto cuantitativo<br>Cambia los PARÁMETROS de <br>la acción"]
+    PASIVA --> III["(iii) Efecto sobre el resultado<br>La acción es la misma,<br>el outcome es distinto"]
 
     style ROOT fill:#2C3E50,color:#fff
     style ACTIVA fill:#27AE60,color:#fff
@@ -55,29 +68,51 @@ flowchart TD
     style III fill:#FAD7A0,color:#222
 ```
 
-### (i) Efecto cualitativo → estigmergia activa
-Una acción previa **cambia la elección de acción** del agente siguiente. El agente hace algo *distinto* de lo que habría hecho sin esa señal ambiental. Captura el sentido original de Grassé: la acción es guiada por el entorno.
+### 2.1. Clasificación por efecto en la acción
 
-### (ii) Efecto cuantitativo → estigmergia activa
-La acción elegida no cambia, pero sí sus **parámetros**: posición, intensidad, frecuencia, duración, latencia. El agente hace lo mismo pero de forma diferente.
+Existen tres formas distintas en las que el resultado de la conducta de un agente puede verse afectado por cambios ambientales previos:
+* **Efecto Cualitativo**: El cambio en el entorno afecta **la elección de la acción** que realiza el agente. Este concepto captura la visión original de Grassé sobre el comportamiento siendo "guiado" por la obra misma.
+* **Efecto Cuantitativo**: La acción seleccionada no cambia, pero se ven afectados sus parámetros, como la posición exacta, fuerza, frecuencia, latencia o duración. Esto incluye el elemento de la "intensidad" de la actividad.
+* **Efecto en el Resultado**: En este caso, una acción previa no afecta ni la elección ni los parámetros de la acción posterior, sino únicamente su desenlace o consecuencia.
 
-### (iii) Efecto sobre el resultado → estigmergia pasiva
-La acción previa no cambia ni la elección ni los parámetros, pero sí el **resultado físico**. El agente intenta hacer X, pero el entorno modificado produce Y.
+### 2.2. Estigmergia Activa vs. Pasiva
 
-> [!NOTE]
-> **Ejemplo canónico de estigmergia pasiva:** un coche en un camino de barro. El conductor decide su trayectoria independientemente, pero las roderas de conductores anteriores desvían físicamente el resultado. Las acciones pasadas afectan el *outcome* sin tocar la decisión.
+Las fuentes agrupan los efectos anteriores en dos grandes tipos:
+* **Estigmergia Activa**: Comprende los efectos cualitativos y cuantitativos. Se denomina "activa" porque el estímulo ambiental afecta directamente al agente mismo (su comportamiento o decisiones).
+* **Estigmergia Pasiva**: Se refiere al tercer caso, donde el entorno cambia de tal manera que altera el resultado de acciones futuras sin cambiar el comportamiento del agente.
+  * **Ejemplo**: Un coche que circula por un camino embarrado. Aunque el conductor intente seguir una ruta, las ruedas pueden quedar atrapadas en los surcos dejados por conductores anteriores, forzando al coche a seguir esa trayectoria
+  * **Casos físicos**: Este tipo es muy cercano a situaciones puramente físicas donde fuerzas constantes (como fluidos) cambian el entorno, afectando su evolución futura, como ocurre en la formación de dunas de arena o deltas de ríos.
 
-> [!TIP]
-> La estigmergia pasiva se aproxima a fenómenos puramente físicos — dunas de arena, deltas de ríos, meandros — donde una fuerza constante modifica el entorno. La estigmergia **activa** añade agentes móviles con capacidad de sensar y actuar, amplificando exponencialmente el rango de estructuras posibles.
+### 2.3. Diferencia clave en sistemas robóticos y biológicos
+
+La **estigmergia activa** (mediada por el comportamiento) es la que ha sido explotada por la evolución en colonias de insectos sociales y es fundamental en la robótica colectiva.
+
+A diferencia de la puramente física, involucra agentes móviles que pueden sentir el entorno local y actuar sobre él de formas determinadas por su constitución física y computacional, lo que permite la creación de estructuras espaciotemporales mucho más ricas.
 
 ---
 
 ## 3. Estigmergia y auto-organización
 
-La estigmergia es el **mecanismo**; la auto-organización (SO) es el **proceso emergente** que resulta de aplicarlo iterativamente.
+La **autoorganización (SO)** y la **estigmergia** están profundamente vinculadas, siendo la estigmergia el *mecanismo fundamental* que permite que un entorno se estructure a sí mismo a través de las actividades (*mecanismo emergente*) de los agentes que lo habitan.
 
 > [!IMPORTANT]
 > **Definición de SO** (Bonabeau et al., citado en el paper): *"Un conjunto de mecanismos dinámicos donde las estructuras aparecen a nivel global a partir de interacciones entre componentes de nivel inferior. Las reglas se ejecutan sobre información puramente local, sin referencia al patrón global."*
+
+### La Estigmergia como Motor de la Autoorganización
+
+La estigmergia es el proceso que proporciona los ingredientes necesarios para que ocurra la autoorganización en sistemas biológicos y robóticos. Esta conexión se basa en que el estado del entorno y la distribución de los agentes determinan cómo cambiarán ambos en el futuro. Para que la estigmergia resulte en autoorganización, se requieren cuatro ingredientes básicos:
+1. **Retroalimentación positiva** (amplificación de cambios).
+2. **Retroalimentación negativa** (estabilización).
+3. **Amplificación de fluctuaciones**.
+4. **Interacciones múltiples**
+
+### Firmas de la Autoorganización Estigmergica
+
+Las fuentes identifican tres señales o "firmas" que confirman que un sistema estigmergico se está autoorganizando, las cuales fueron validadas en experimentos con robots:
+* **Creación de estructuras espaciotemporales**: Por ejemplo, la formación de cúmulos a partir de objetos distribuidos de manera uniforme.
+* **Multiestabilidad**: La capacidad del sistema para alcanzar diferentes estados estables finales partiendo de condiciones similares.
+* **Bifurcaciones determinadas paramétricamente**: Cambios cualitativos bruscos en el resultado final debido a variaciones mínimas en un parámetro (como el experimento donde cambiar la probabilidad de soltar un objeto cambió el agrupamiento de central a periférico).
+
 
 ```mermaid
 flowchart LR
@@ -103,8 +138,43 @@ flowchart LR
     style F3 fill:#FADBD8,color:#222
 ```
 
-> [!WARNING]
-> **Bifurcación paramétrica:** pequeños cambios en un parámetro del sistema pueden producir cambios *cualitativos* en el resultado — no graduales sino abruptos. El Experimento 3 del paper lo demuestra empíricamente: con p=0.88 el sistema produce indistintamente clústeres centrales o periféricos, dos atractores completamente distintos.
+### Diferencia entre Sistemas Físicos y Agentes
+
+Aunque existen procesos de autoorganización puramente físicos (como la formación de dunas de arena), la **autoorganización estigmergica** se distingue por involucrar **agentes móviles**. Estos agentes pueden sentir el entorno y actuar sobre él de formas determinadas por su constitución física y computacional, lo que permite una riqueza de estructuras espaciotemporales infinitamente mayor que las derivadas únicamente de la física ambiental.
+
+> [!TIP]
+> En resumen, la estigmergia actúa como el mecanismo de mediación (a través del entorno) que permite que las acciones locales y simples de los individuos se coordinen para generar un orden global complejo sin necesidad de una planificación central.
+
+## 4. Comentarios adicionales
+
+Mas alla de lo anteriormente planteado, hay unos comentarios adicionales fundamentales para comprender la profundidad y las aplicaciones de la estigmergia en sistemas naturales y artificiales:
+
+### 4.1. Requisitos mínimos de Agente y Entorno
+
+Para que la estigmergia ocurra, se deben cumplir condiciones mínimas en ambos componentes del sistema:
+* **El Agente**: Debe tener dos capacidades clave: poder moverse por el entorno y poder actuar sobre él.
+* **El Entorno**: Debe permitir cambios locales realizados por los agentes, y estos cambios deben persistir lo suficiente para afectar comportamientos futuros. Por esta razón, se descarta la estigmergia en entornos altamente dinámicos o vacíos, como el espacio exterior, el aire o el agua abierta.
+
+### 4.2. La Estigmergia como Estrategia Social
+
+Las fuentes destacan que la estigmergia permite una ventaja crítica para los insectos sociales: **desacoplar la tarea del individuo**.
+* A diferencia de las especies solitarias, donde la ejecución de un movimiento suele depender de un "estado interno" del animal, en los sistemas estigmergicos la **señal externa es suficiente** para iniciar el siguiente paso.
+* Esto garantiza que una secuencia completa de tareas (como construir un nido) se ejecute incluso **si cada movimiento es realizado por un agente diferente**, permitiendo una coordinación masiva sin comunicación directa.
+
+### 4.3. Explotación de la Física
+
+Un comentario central en las fuentes es que la estigmergia es, esencialmente, la "**explotación de la física a través del comportamiento**".
+* Se observa que cuanto más rica y compleja es la física del entorno, más simple puede ser el comportamiento del agente.
+* Esto explica por qué los experimentos con robots reales suelen encontrar soluciones más simples que las simulaciones abstractas por computadora; los robots aprovechan las **restricciones físicas reales** (como la fricción o el contacto) que a menudo se omiten en modelos digitales.
+
+### 4.4. Sensibilidad y Evolución
+
+Debido a que la autoorganización estigmergica surge de la interacción continua entre sensores, actuadores, el cuerpo del agente y el entorno, el sistema es **extremadamente sensible** a variaciones mínimas en cualquiera de estos factores
+* Desde un punto de vista biológico, esto significa que la **evolución** tiene múltiples puntos donde actuar para modificar un resultado: puede ajustar la sensibilidad de un sensor, la forma del cuerpo o la respuesta algorítmica ante un estímulo.
+
+### 4.5. Control Morfogenético
+
+Finalmente, las fuentes sugieren que la estigmergia no solo controla acciones individuales en sitios específicos, sino que controla el desarrollo de una construcción mediante el **control de la distribución de los agentes** en el espacio. Al atraer a más trabajadores a zonas de alta densidad de estímulos, el sistema regula la velocidad y la forma del crecimiento estructural.
 
 ---
 
@@ -267,3 +337,7 @@ flowchart LR
 ---
 
 *Referencia completa: Holland, O. & Melhuish, C. (1999). Stigmergy, self-organisation, and sorting in collective robotics. Artificial Life.*
+
+## Anotaciones sueltas
+
+En terminos de Estigmergia en teminos humanos, un ejemplo puede verse en el Manual Valve [[ES]](https://media.steampowered.com/apps/valve/hbook-ES.pdf) [[EN]](https://cdn.akamai.steamstatic.com/apps/valve/Valve_NewEmployeeHandbook.pdf) de Valve Corporation [[link]](https://en.wikipedia.org/wiki/Valve_Corporation).
