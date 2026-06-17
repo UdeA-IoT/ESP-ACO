@@ -1,0 +1,4 @@
+{
+  "Initialize:": "(CONST, VAR, FUNC, robot, params) => {\n  CONST.maxForwardSpeed = 0.15;\n  CONST.maxAngularSpeed = 0.03;\n  VAR.collisions = 0;\n}",
+  "Loop:": "(sensors, actuators) => {\n  const nearbyRobots = sensors.polygons?.left?.reading?.robots \n                     + sensors.polygons?.right?.reading?.robots || 0;\n\n  if (nearbyRobots > 0) {\n    VAR.collisions += 1;\n  }\n\n  const angularSpeed = (Math.random() - 0.5) * CONST.maxAngularSpeed;\n\n  return {\n    linearVel: CONST.maxForwardSpeed * robot.velocityScale,\n    angularVel: angularSpeed * robot.velocityScale,\n    type: robot.SPEED_TYPES.RELATIVE\n  };\n}"
+}

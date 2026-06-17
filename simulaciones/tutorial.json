@@ -1,0 +1,4 @@
+{
+  "Initialize:": "(CONST, VAR, FUNC, robot, params) => {\n  CONST.maxAngularSpeed = 0.015;\n  CONST.maxForwardSpeed = 0.2;\n}",
+  "Loop:": "(sensors, actuators) => {\n  const leftPucks = sensors.polygons.left.reading.pucks;\n  const angularSpeed = leftPucks > 0 ? -CONST.maxAngularSpeed : CONST.maxAngularSpeed;\n  \n  return {\n    linearVel: CONST.maxForwardSpeed,\n    angularVel: angularSpeed,\n    type: robot.SPEED_TYPES.RELATIVE\n  };\n}"
+}
