@@ -1,3 +1,5 @@
+![Built with AI](https://img.shields.io/badge/Built%20with-AI-blue.svg)
+
 # Estigmergia, Auto-organización y Sorting — Conceptos Clave
 **Fuente:** Holland & Melhuish (1999), *Stigmergy, self-organisation, and sorting in collective robotics*
 
@@ -207,6 +209,8 @@ sequenceDiagram
 > - La secuencia completa puede ejecutarse con **agentes distintos para cada paso**
 > - La tasa de ejecución en cada ubicación es función del número de agentes presentes → el entorno **distribuye la fuerza de trabajo automáticamente**
 
+**NOTA**: Hasta aqui ha sido bien leido el articulo, lo siguiente debe ser analizado con mas calma...
+
 ---
 
 ## 5. Demostración robótica: complejidad de reglas triviales
@@ -223,6 +227,31 @@ Holland & Melhuish demuestran que el **sorting de dos tipos de objetos** emerge 
 | Detectar obstáculos por IR | Comunicación entre robots |
 | Moverse en línea recta y girar aleatoriamente | Conocimiento de densidad local |
 | | Modelo del estado global |
+
+### Taxonomía de la Clasificación Espacial
+
+Los autores definen cuatro tipos básicos de ordenamiento de objetos:
+* **Clustering (Agrupamiento)**: Reunir una clase de objetos en un área pequeña.
+* **Segregación**: Agrupar dos o más clases de objetos en áreas separadas y no traslapadas.
+* **Patch sorting (Clasificación por parches)**: Cada clase es agrupada y segregada en pilas distintas.
+* **Annular sorting (Clasificación anular)**: Formar un núcleo de una clase rodeado por anillos concéntricos de otras clases.
+
+![taxonomia](images/fig5_taxonomia.png)
+
+### Metodología Experimental
+
+**Agentes (U-bots)**: Robots de 23 cm de diámetro con tracción diferencial, sensores infrarrojos y una pinza diseñada para manipular "frisbees".
+
+  ![ubot](images/fig1_ubot.png)
+  
+
+* **Entorno**: Una arena octogonal de gran tamaño (lados de 4m) con una cámara cenital para el seguimiento
+
+  ![ubot](images/fig4_arena.png)
+
+* **Objetos**: Frisbees amarillos ("plains") y rojos/negros con centro blanco ("rings").
+
+  ![ubot](images/fig2_ubot_discos.png)
 
 ### El algoritmo pullback
 
@@ -341,3 +370,29 @@ flowchart LR
 ## Anotaciones sueltas
 
 En terminos de Estigmergia en teminos humanos, un ejemplo puede verse en el Manual Valve [[ES]](https://media.steampowered.com/apps/valve/hbook-ES.pdf) [[EN]](https://cdn.akamai.steamstatic.com/apps/valve/Valve_NewEmployeeHandbook.pdf) de Valve Corporation [[link]](https://en.wikipedia.org/wiki/Valve_Corporation).
+
+### Simuladores online
+
+## Simuladores de Estigmergia
+
+### Online
+
+| Simulador | Descripción / Modelo | Enlace de Acceso |
+| :--- | :--- | :--- |
+| **NetLogo Web (Ants)** | El clásico modelo de recolección de comida de hormigas. Permite ajustar la tasa de evaporación y difusión de las feromonas en tiempo real desde el navegador. | [Simular en NetLogo Web](https://netlogoweb.org/launch#http://netlogoweb.org/assets/models/Sample%20Models/Biology/Ants.nlogo) |
+| **NetLogo Web (Termites)** | Simulación de estigmergia cualitativa basada en termitas que recolectan astillas de madera. No usan feromonas, sino que modifican el entorno amontonando bloques siguiendo reglas simples. | [Simular en NetLogo Web](https://netlogoweb.org/launch#http://netlogoweb.org/assets/models/Sample%20Models/Biology/Termites.nlogo) |
+| **ACO Simulator (GitHub Pages)** | Simulador interactivo en JavaScript del algoritmo de Optimización de Colonias de Hormigas enfocado en resolver el Problema del Viajero del Comercio (TSP). Permite ver visualmente los caminos de feromona. | [Abrir ACO Simulator](https://thiagodnf.github.io/aco-simulator/) |
+| **NetLogo Web (Vants)** | Una variante de autómatas celulares (similar a la Hormiga de Langton) orientada a la creación de patrones estigmérgicos en una cuadrícula a través de marcas de color. | [Simular en NetLogo Web](https://www.netlogoweb.org/launch#http://netlogoweb.org/assets/models/Sample%20Models/Computer%20Science/Vants.nlogo) |
+
+### Combinados
+
+| Nombre | Tipo de acceso | Mecanismo principal | Relevancia para Holland & Melhuish | URL |
+|---|---|---|---|---|
+| **Stigmergy Swarm Simulator** | Online (browser) | Estigmergia genérica, comunicación indirecta | Alta — simulador dedicado al concepto del paper | [stigmergy-simulator.netlify.app](https://stigmergy-simulator.netlify.app/) |
+| **Ant Colony Simulator (Starlighttools)** | Online (browser) | Feromona, evaporación, difusión, two-pheromone fields | Alta — captura la dinámica Deneubourg que fundamenta el paper | [starlighttools.org/science/ant-colony-simulator](https://starlighttools.org/science/ant-colony-simulator) |
+| **SwarmJS** | Online (browser) | Clustering, sorting de objetos, feromona, construcción planar | Muy alta — incluye escenas de object clustering y sorting directamente análogas a los experimentos | [m-abdulhak.github.io/SwarmJS](https://m-abdulhak.github.io/SwarmJS/) |
+| **NetLogo Web — Ants model** | Online (browser) | Feromona, foraging, trails emergentes | Media-Alta — modelo canónico de Wilensky que antecede al paper | [netlogoweb.org/launch#Ants](https://netlogoweb.org/launch#Ants) |
+| **NetLogo Web — Ant Lines** | Online (browser) | Formación de senderos, estigmergia de trail | Media | [netlogoweb.org/launch#AntLines](https://netlogoweb.org/launch#AntLines) |
+| **ARGoS3** | Desktop (Linux/Mac) | Física real, swarms de cientos de robots, modelos e-puck/foot-bot | Muy alta — el simulador más usado en literatura de swarm con estigmergia | [github.com/ilpincy/argos3](https://github.com/ilpincy/argos3) |
+| **Webots** | Desktop (multiplataforma) | Física completa, robots reales modelados, comportamiento colectivo | Alta — útil para validar comportamiento cercano a hardware real | [cyberbotics.com](https://cyberbotics.com) |
+| **NetLogo desktop** | Desktop (Java) | Agent-based modeling general, modelos de hormigas, clustering, sorting | Alta — plataforma sobre la que se construyeron simulaciones del linaje Deneubourg | [ccl.northwestern.edu/netlogo](https://ccl.northwestern.edu/netlogo/) |
