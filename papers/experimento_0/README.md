@@ -90,6 +90,7 @@ Env Height → 300
 * https://microsoft.github.io/ai-agents-for-beginners/translations/es/
 * https://github.com/microsoft/ai-for-beginners
 * https://mit-mi.github.io/how2ai-course/spring2025/
+* https://introml.mit.edu/spring25/
 * https://github.com/glouppe/info8006-introduction-to-ai
 * https://ocw.mit.edu/courses/6-034-artificial-intelligence-fall-2010/
 * https://github.com/estebancalabria/Intro-Ia
@@ -99,3 +100,6 @@ Env Height → 300
 * https://bots.cs.mun.ca/waggle1/
 * https://dgarzonramos.github.io/robotics101/p2/
 * https://dgarzonramos.com/
+* https://courses.csail.mit.edu/6.034s/calendar
+* https://bahh723.github.io/ai2024fa/
+

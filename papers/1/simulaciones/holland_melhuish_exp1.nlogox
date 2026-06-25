@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model version="NetLogo 7.0.4" snapToGrid="true">
+  <code><![CDATA[
+; =============================================================================
+; STIGMERGY, SELF-ORGANISATION, AND SORTING IN COLLECTIVE ROBOTICS
+; Holland & Melhuish (1999) - Artificial Life 5(2): 173-202
+; https://doi.org/10.1162/106454699568737
+;
+; EXPERIMENT 1: Adequacy of Arena Size
+; NetLogo 6.4 / 7.x compatible model
+;
+; Author of this NetLogo model: Claude (Anthropic, claude-sonnet-4-6)
+; Supervision and research context: Stigmergy & Swarm Robotics Project
+; Date: June 2026
+;
+; PURPOSE OF THIS MODEL
+; ---------------------
+; This model replicates Experiment 1 of Holland & Melhuish (1999).
+; This is NOT a clustering experiment -- it is a calibration study.
+;
+; Before running any collective behaviour experiment, H&M needed to verify
+; that their arena was large enough so that robot-robot collisions were rare.
+; Any emergent behaviour in later experiments should be attributed to
+; stigmergic robot-object interaction, NOT to direct crowding between robots.
+;
+; The key finding (Section 5, Experiment 1, p. 10):
+;   "As the rate of increase in number of collisions with increasing numbers
+;    of robots is LOW AND ROUGHLY CONSTANT under both conditions, the system
+;    is operating under a LINEAR rather than an exponential regime."
+;   -- Holland & Melhuish (1999)
+;
+; If the curve were exponential, robots would be blocking each other so
+; often that collective behaviour would be dominated by crowding, not
+; by stigmergy. Linear growth means each additional robot contributes
+; roughly the same marginal collision rate -- robots behave as
+; essentially independent agents in a sparse environment.
+;
+; PHYSICAL-TO-NETLOGO MAPPING
+; ---------------------------
+; Physical robot (U-bot):
+;   - Diameter: 23 cm
+;   - IR sensors: 4 (3 forward, 1 backward), range ~20 cm
+;   - Drive: differential, straight-line motion, turns on the spot
+;   - Arena/robot area ratio: 1760 (same order as Leptothorax nest : ant)
+;
+; This model:
+;   - Robot       -> turtle (circular shape, 1 patch unit radius)
+;   - Arena       -> circular region, radius = ARENA-RADIUS patches
+;   - Area ratio  -> calibrated via ARENA-RADIUS = 23
+;                    (pi * 23^2 / pi * 1^2 ~= 529 patches^2 / robot;
+;                     full NetLogo world is larger; ratio preserved in spirit)
+;   - Collision   -> turtle-turtle proximity + boundary patch detection
+;   - No gripper, no frisbee carrying in Exp 1 (those appear in Exp 2)
+;   - Robot does NOT distinguish robot-robot vs robot-wall collisions:
+;     "The robots are unable to discriminate between the two conditions."
+;     -- H&M p. 10. This is faithfully reproduced here.
+;
+; EXPERIMENTAL CONDITIONS (Section 5, Experiment 1):
+;   Condition A -- Empty arena:    1 to 13 robots, no objects present
+;   Condition B -- Central cluster: same, but 22 frisbees placed centrally
+;   Duration: 20 minutes real time (mapped to MAX-TICKS slider here)
+;   Metric: average number of collisions per robot over the full run
+;
+; EXPECTED RESULT (validation criterion):
+;   Both curves (A and B) must grow LINEARLY with robot count.
+;   Exponential growth = arena too small, robots too crowded.
+;   This linear check is the gateway condition before running Experiments 2-10.
+; =============================================================================
+
+
+; --- BREEDS ------------------------------------------------------------------
+
+breed [ robots robot ]
+; Mobile agents representing U-bots from the physical experiment.
+; H&M: "The robots (Figure 1), known as U-bots, were designed and built
+; in our laboratory to provide a flexible and capable platform for a range
+; of collective robot experiments." (p. 7)
+
+breed [ frisbees frisbee ]
+; Static obstacles used only in Condition B (central cluster).
+; H&M: "The runs were then repeated with a centrally placed cluster of
+; 22 frisbees." (p. 10)
+; In Experiment 2 frisbees become mobile -- here they are fixed.
+
+
+; --- AGENT VARIABLES ---------------------------------------------------------
+
+robots-own [
+  collision-count
+  ; Per-robot collision counter.
+  ; H&M (p. 10): "the process was automated by programming each robot to
+  ; record the number of collisions it experienced with other robots and
+  ; with the boundary."
+  ; Note: NO discrimination between robot-robot and robot-boundary events.
+  ; "The robots are unable to discriminate between the two conditions."
+  ; -- H&M p. 10
+
+  currently-colliding?
+  ; Debounce flag. Prevents counting the same physical contact event across
+  ; multiple consecutive ticks. Without this, a robot pressing against a
+  ; wall for several ticks would register multiple collisions from one event.
+  ; Reset to false only after the robot resumes free forward motion.
+]
+
+
+; --- GLOBALS -----------------------------------------------------------------
+
+globals [
+  arena-radius
+  ; Radius of the circular arena in patches.
+  ; Target: arena/robot area ratio ~= 1760 (H&M physical ratio).
+  ; With arena-radius = 23: pi*23^2 ~= 1661 patches; robot = 1 patch.
+  ; Ratio 1661:1 is close enough to reproduce the linear-growth regime.
+
+  run-complete?
+  ; Set to true when ticks >= max-ticks. Stops the go loop.
+
+  total-collisions-this-run
+  ; Running sum across all robots. Drives the monitor widget.
+]
+
+
+; =============================================================================
+; SETUP
+; =============================================================================
+
+to setup
+  clear-all
+
+  set arena-radius 23
+  ; 23-patch radius chosen to approximate the H&M arena/robot area ratio.
+  ; H&M (p. 9): "The robots are run in a large arena (Figure 4) which is
+  ; octagonal in shape, with 4 metre sides; the area is 1760 times the
+  ; area of a robot."
+  ; We use a circular boundary (simpler in NetLogo); the octagonal shape
+  ; of H&M's arena matters for corner effects, which are irrelevant to
+  ; the linear-vs-exponential collision-rate conclusion.
+
+  set run-complete? false
+  set total-collisions-this-run 0
+
+  draw-arena
+  place-robots
+  if show-central-frisbees? [ place-frisbees ]
+
+  reset-ticks
+end
+
+
+; --- draw-arena --------------------------------------------------------------
+; Paint wall patches (outside arena-radius) dark.
+; Robots detect wall patches ahead and treat them as collision surfaces,
+; exactly as the U-bots detected the rigid plastic pipe boundary via IR.
+to draw-arena
+  ask patches [
+    ifelse distancexy 0 0 <= arena-radius
+    [ set pcolor 9  ]   ; floor: light gray
+    [ set pcolor 35 ]   ; wall:  brown-gray (visually distinct)
+  ]
+end
+
+
+; --- place-robots ------------------------------------------------------------
+; Create N robots at random positions inside the arena with random headings.
+; H&M Experiment 1: "From 1 to 13 robots were run for 20 minutes in an
+; empty arena." (p. 10)
+; Each robot gets a fresh collision counter.
+to place-robots
+  create-robots num-robots [
+    set shape "circle"
+    set color red
+    set size 1.4
+    set collision-count 0
+    set currently-colliding? false
+
+    ; Random placement inside circular arena (rejection sampling)
+    let placed? false
+    while [ not placed? ] [
+      setxy (random-float (2 * arena-radius) - arena-radius)
+            (random-float (2 * arena-radius) - arena-radius)
+      if distancexy 0 0 < (arena-radius - 1.5) [
+        set placed? true
+      ]
+    ]
+    set heading random-float 360
+  ]
+end
+
+
+; --- place-frisbees ----------------------------------------------------------
+; Place 22 frisbees in a tight central cluster (Condition B).
+; H&M (p. 10): "The runs were then repeated with a centrally placed
+; cluster of 22 frisbees."
+; Frisbees are STATIC here -- they only add passive obstacles that
+; slightly raise the collision rate (reflected in the second curve
+; of Figure 5 in the paper).
+; In Experiment 2, frisbees become mobile objects that robots push.
+to place-frisbees
+  let cols 5
+  let spacing 2.4
+  let n 0
+  let row 0
+  while [ n < 22 ] [
+    let col 0
+    while [ col < cols and n < 22 ] [
+      let fx (col - 2) * spacing + (row mod 2) * (spacing / 2)
+      let fy (row * spacing * 0.87) - 4
+      create-frisbees 1 [
+        set shape "circle"
+        set color yellow
+        set size 1.8
+        setxy fx fy
+      ]
+      set n n + 1
+      set col col + 1
+    ]
+    set row row + 1
+  ]
+end
+
+
+; =============================================================================
+; MAIN LOOP
+; =============================================================================
+
+to go
+  if run-complete? [ stop ]
+
+  ask robots [
+    move-robot
+    check-robot-collision
+  ]
+
+  set total-collisions-this-run sum [ collision-count ] of robots
+
+  tick
+
+  ; Stop when the run reaches the configured duration.
+  ; H&M ran each condition for 20 minutes. MAX-TICKS is your proxy.
+  ; Default 1200 ticks ~= 20 minutes at ~1 tick/second.
+  if ticks >= max-ticks [
+    set run-complete? true
+    record-data-point
+  ]
+end
+
+
+; =============================================================================
+; ROBOT BEHAVIOUR
+; =============================================================================
+
+; --- move-robot --------------------------------------------------------------
+; Implements the U-bot base behaviour: straight-line motion interrupted by
+; random turns on collision.
+;
+; In Experiment 1 there is no gripper logic -- only Rule 3 from Figure 6:
+;   Rule 3: "go forward"
+; On collision with wall or frisbee obstacle:
+;   Rule 1 equivalent: "make random turn away from object"
+;
+; H&M (p. 12): "A U-bot approaching another U-bot or the boundary will
+; detect it, but will continue moving until it hits it with its gripper.
+; The combination of the gripper being pressed and an obstacle being
+; detected will then trigger a random turn away from the side on which
+; the obstacle was detected."
+;
+; We simplify: patch-ahead detection substitutes for the IR sensor range.
+; The random turn range is controlled by the COLLISION-TURN-RANGE slider.
+to move-robot
+  let ahead patch-ahead 1
+
+  ifelse ahead = nobody or
+         [ pcolor ] of ahead = 35 or
+         any? frisbees-on ahead
+  [
+    ; --- COLLISION: wall or frisbee obstacle ---
+    ; Log the collision (with debounce), then turn randomly.
+    ; H&M: robots "are unable to discriminate" between robot-robot and
+    ; boundary collisions -- both simply increment the counter. (p. 10)
+    log-collision
+    rt (random-float collision-turn-range) - (collision-turn-range / 2)
+    ; Robot does NOT advance this tick; it turns on the spot.
+  ]
+  [
+    ; --- FREE MOVEMENT: Rule 3 ---
+    forward robot-speed
+    set currently-colliding? false  ; debounce reset after free motion
+  ]
+end
+
+
+; --- check-robot-collision ---------------------------------------------------
+; Detect robot-robot proximity (occupying the same patch).
+; This is separate from boundary/frisbee detection in move-robot because
+; robots can collide mid-arena without any wall involvement.
+; Both robots in a pair independently detect and count the event.
+; H&M counted from each robot's perspective, so this double-count is correct.
+to check-robot-collision
+  if any? other robots-here [
+    log-collision
+    rt (random-float collision-turn-range) - (collision-turn-range / 2)
+  ]
+end
+
+
+; --- log-collision -----------------------------------------------------------
+; Increment the robot's collision counter with debounce.
+; The currently-colliding? flag ensures one physical contact = one count,
+; even if the robot remains in contact for multiple ticks while turning.
+to log-collision
+  if not currently-colliding? [
+    set collision-count collision-count + 1
+    set currently-colliding? true
+  ]
+end
+
+
+; =============================================================================
+; DATA COLLECTION
+; =============================================================================
+
+; --- record-data-point -------------------------------------------------------
+; Print one line to the output box when a run completes.
+; Collect these lines across num-robots = 1..13 to reproduce Figure 5.
+;
+; H&M Figure 5 caption: "Average number of collisions between robots in
+; 20 minutes with a clear arena, and with a central cluster of frisbees."
+;
+; REPRODUCTION PROTOCOL FOR FIGURE 5:
+;   Phase A -- empty arena:
+;     For each N in [1 2 3 4 5 6 7 8 9 10 11 12 13]:
+;       1. Set num-robots = N, show-central-frisbees? = OFF
+;       2. Click Setup, then Go (runs until max-ticks)
+;       3. Note mean-collisions-per-robot from output / monitor
+;   Phase B -- with frisbees:
+;       Repeat Phase A with show-central-frisbees? = ON
+;   Expected: both curves grow LINEARLY (not exponentially).
+;
+;   Alternatively, use Tools -> BehaviorSpace:
+;     variable: ["num-robots" [1 1 13]]
+;     measure:  mean-collisions-per-robot
+;     run at completion
+to record-data-point
+  let cond-label ifelse-value show-central-frisbees? [ "with-frisbees" ] [ "empty" ]
+  output-print (word
+    "robots=" num-robots
+    "  cond=" cond-label
+    "  mean=" precision mean-collisions-per-robot 2
+    "  ticks=" ticks
+  )
+end
+
+
+; =============================================================================
+; REPORTERS
+; =============================================================================
+
+to-report mean-collisions-per-robot
+  ; Mean collisions across all robots.
+  ; This is the Y-axis of Figure 5 in H&M (1999).
+  ifelse any? robots
+  [ report mean [ collision-count ] of robots ]
+  [ report 0 ]
+end
+
+to-report max-collisions-per-robot
+  ; Max collisions any single robot experienced.
+  ; Useful for detecting outlier robots stuck near a boundary corner.
+  ifelse any? robots
+  [ report max [ collision-count ] of robots ]
+  [ report 0 ]
+end
+
+to-report collision-rate-per-tick
+  ; Instantaneous rate: total collisions / elapsed ticks.
+  ; Should stabilise to a roughly constant value per robot in the linear regime.
+  ifelse ticks > 0
+  [ report total-collisions-this-run / ticks ]
+  [ report 0 ]
+end
+
+; =============================================================================
+; INTERFACE REFERENCE
+; =============================================================================
+; Sliders (create in Interface tab):
+;
+;   num-robots            min=1    max=13   default=5   step=1
+;     Number of robots. H&M swept 1 to 13 to produce Figure 5.
+;
+;   max-ticks             min=100  max=5000 default=1200 step=100
+;     Duration proxy for the 20-minute run.
+;
+;   robot-speed           min=0.1  max=1.0  default=0.5 step=0.1
+;     Forward speed in patches/tick. Affects absolute counts but not
+;     the linear-vs-exponential regime conclusion.
+;
+;   collision-turn-range  min=30   max=360  default=180 step=10
+;     Max random turn angle after collision (degrees).
+;     H&M describe "random turn"; distribution unspecified in the paper.
+;
+; Switch:
+;   show-central-frisbees?  default=OFF
+;     OFF -> Condition A: empty arena (Figure 5 "Clear Arena" curve)
+;     ON  -> Condition B: 22 frisbees centrally placed ("Central Cluster")
+;
+; Monitors:
+;   mean-collisions-per-robot    reporter: mean-collisions-per-robot
+;   max-collisions-per-robot     reporter: max-collisions-per-robot
+;   collision-rate-per-tick      reporter: collision-rate-per-tick
+;
+; Output box: receives lines from record-data-point at run completion.
+;
+; Plot: "Avg collisions / robot"
+;   x: ticks   y: mean-collisions-per-robot
+;   pen "this-run": plot mean-collisions-per-robot
+; =============================================================================
+
+]]></code>
+  <widgets>
+    <view x="210" wrappingAllowedX="false" y="10" frameRate="30.0" minPycor="-23" height="450" showTickCounter="true" patchSize="9.0" fontSize="10" wrappingAllowedY="false" width="450" tickCounterLabel="ticks" maxPycor="23" updateMode="1" maxPxcor="23" minPxcor="-23"></view>
+    <button x="10" y="10" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="90" display="Setup" actionKey="S">setup</button>
+    <button x="105" y="10" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="90" display="Go" actionKey="G">go</button>
+    <button x="200" y="10" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="90" display="Step">go</button>
+    <slider x="10" step="1" y="60" max="13" width="190" display="num-robots" height="50" min="1" direction="Horizontal" default="5.0" variable="num-robots"></slider>
+    <slider x="10" step="100" y="115" max="5000" width="190" display="max-ticks" height="50" min="100" direction="Horizontal" default="1200.0" variable="max-ticks" units="ticks"></slider>
+    <slider x="10" step="0.1" y="170" max="1.0" width="190" display="robot-speed" height="50" min="0.1" direction="Horizontal" default="0.5" variable="robot-speed" units="p/tick"></slider>
+    <slider x="10" step="10" y="225" max="360" width="190" display="collision-turn-range" height="50" min="30" direction="Horizontal" default="180.0" variable="collision-turn-range" units="deg"></slider>
+    <switch x="10" y="280" height="40" on="false" variable="show-central-frisbees?" width="190" display="show-central-frisbees?"></switch>
+    <monitor x="10" precision="2" y="330" height="60" fontSize="11" width="145" display="Mean coll/robot">mean-collisions-per-robot</monitor>
+    <monitor x="160" precision="0" y="330" height="60" fontSize="11" width="40">max-collisions-per-robot</monitor>
+    <monitor x="10" precision="0" y="395" height="60" fontSize="11" width="90" display="Ticks">ticks</monitor>
+    <monitor x="105" precision="2" y="395" height="60" fontSize="11" width="95" display="Rate/tick">collision-rate-per-tick</monitor>
+    <plot x="10" autoPlotX="true" yMax="60.0" autoPlotY="true" yAxis="Mean coll/robot" y="460" xMin="0.0" height="150" legend="false" xMax="1200.0" yMin="0.0" width="190" xAxis="Ticks" display="Avg collisions / robot">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="this-run" color="-2674135" legend="true">
+        <setup></setup>
+        <update>plot mean-collisions-per-robot</update>
+      </pen>
+    </plot>
+    <output x="670" y="10" width="300" height="200" fontSize="11"></output>
+  </widgets>
+  <info>Holland and Melhuish (1999) - Experiment 1 Replication
+Author: Claude (Anthropic, claude-sonnet-4-6), June 2026
+
+Purpose: Calibration experiment verifying that robot collision rate grows
+linearly (not exponentially) with robot count. This is the precondition
+for all subsequent stigmergy experiments.
+
+Sliders:
+  num-robots: sweep 1-13 to reproduce Figure 5 of H&amp;M (1999)
+  max-ticks: proxy for 20-minute run
+  robot-speed: forward speed per tick
+  collision-turn-range: random turn angle after collision
+
+Switch:
+  show-central-frisbees? OFF = empty arena (Condition A)
+                          ON  = 22 frisbees centrally placed (Condition B)
+
+Expected result: both curves grow linearly with robot count.
+</info>
+  <turtleShapes>
+    <shape name="default" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="5"></point>
+        <point x="40" y="250"></point>
+        <point x="150" y="205"></point>
+        <point x="260" y="250"></point>
+      </polygon>
+    </shape>
+    <shape name="circle" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+    </shape>
+  </turtleShapes>
+  <linkShapes>
+    <shape name="default" curviness="0.0">
+      <lines>
+        <line x="-0.2" visible="false">
+          <dash value="0.0"></dash>
+          <dash value="1.0"></dash>
+        </line>
+        <line x="0.0" visible="true">
+          <dash value="1.0"></dash>
+          <dash value="0.0"></dash>
+        </line>
+        <line x="0.2" visible="false">
+          <dash value="0.0"></dash>
+          <dash value="1.0"></dash>
+        </line>
+      </lines>
+      <indicator>
+        <shape name="link direction" rotatable="true" editableColorIndex="0">
+          <line endX="90" startY="150" marked="true" color="-1920102913" endY="180" startX="150"></line>
+          <line endX="210" startY="150" marked="true" color="-1920102913" endY="180" startX="150"></line>
+        </shape>
+      </indicator>
+    </shape>
+  </linkShapes>
+  <previewCommands>setup repeat 75 [ go ]</previewCommands>
+</model>
