@@ -21,6 +21,8 @@ A continuación hay algunas paginas con recursos:
 * http://www.sci.brooklyn.cuny.edu/~meyer/CISC1600/Materials/Unit3/Sources_Project_3/Lab_Project_3.html
 * https://davidenunes.com/courses/netlogo/
 * https://wisc.pb.unizin.org/agent-based-evolutionary-game-dynamics/chapter/i-4/
+* https://ccl.northwestern.edu/
+* https://netlogoweb.org/nettango-builder
 
 
 

@@ -8,6 +8,7 @@ to setup
   clear-all
   set arena-radius 23
   draw-arena
+  place-ubots
   reset-ticks
 end
 
@@ -27,11 +28,38 @@ to-report inside-octagon? [px py]
          (abs px + abs py <= a + d)
 end
 
+to place-ubot
+  create-turtles 1 [
+    set shape "default"
+    set color red
+    set size 2
+    setxy 0 0
+    set heading 0
+  ]
+end
+
+to place-ubots
+  create-turtles num-ubots [
+    set shape "default"
+    set color red
+    set size 2
+    set heading random-float 360
+    let placed? false
+    while [ not placed? ] [
+      setxy (random-float (2 * arena-radius) - arena-radius)
+            (random-float (2 * arena-radius) - arena-radius)
+      if inside-octagon? round xcor round ycor [
+        set placed? true
+      ]
+    ]
+  ]
+end
 
 ]]></code>
   <widgets>
     <view x="368" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-23" height="615" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="615" tickCounterLabel="ticks" maxPycor="23" updateMode="0" maxPxcor="23" minPxcor="-23"></view>
     <button x="90" y="50" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="55" display="setup">setup</button>
+    <input x="170" multiline="false" y="40" height="60" variable="num-ubots" type="number" width="100">5.0</input>
   </widgets>
   <info>## WHAT IS IT?
 

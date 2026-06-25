@@ -4,10 +4,16 @@
 
 globals [ arena-radius ]
 
+turtles-own [
+  collision-count      ; contador de colisiones por robot
+                       ; H&M p.10: cada robot registra sus propias colisiones
+]
+
 to setup
   clear-all
   set arena-radius 23
   draw-arena
+  place-ubots
   reset-ticks
 end
 
@@ -27,11 +33,91 @@ to-report inside-octagon? [px py]
          (abs px + abs py <= a + d)
 end
 
+to place-ubot
+  create-turtles 1 [
+    set shape "default"
+    set color red
+    set size 2
+    setxy 0 0
+    set heading 0
+  ]
+end
+
+to place-ubots
+  create-turtles num-ubots [
+    set shape "default"
+    set color red
+    set size 2
+    set heading random-float 360
+    set collision-count 0        ; inicializar en cero
+    let placed? false
+    while [ not placed? ] [
+      setxy (random-float (2 * arena-radius) - arena-radius)
+            (random-float (2 * arena-radius) - arena-radius)
+      if inside-octagon? round xcor round ycor [
+        set placed? true
+      ]
+    ]
+  ]
+end
+
+to go
+  ask turtles [
+    move-ubot
+  ]  
+  tick
+  if ticks >= 1200 [ stop ]
+end
+
+to move-ubot
+  ; Verificar si hay obstaculo adelante.
+  ; H&M p.10: "robots are unable to discriminate between
+  ; robot-robot and robot-boundary collisions"
+  ; Por eso una sola condicion maneja ambos casos.
+  ifelse obstacle-ahead?
+  [    
+    ; COLISION: incrementar contador y girar aleatoriamente
+    set collision-count collision-count + 1   
+    ; El robot no avanza este tick -- solo gira.
+    ; Angulo aleatorio entre -90 y +90 grados respecto al heading actual.
+    ; H&M: "make random turn away from object"
+    rt (random-float collision-turn-range) - (collision-turn-range / 2)
+  ]
+  [
+    ; MOVIMIENTO LIBRE: MRU.
+    ; H&M Rule 3: "go forward"
+    forward robot-speed
+  ]
+end
+
+to-report obstacle-ahead?
+  ; Devuelve true si el patch adelante es pared
+  ; O si hay otro robot en ese patch.
+  let ahead patch-ahead 1
+  if ahead = nobody [ report true ]
+  if [pcolor] of ahead = 35 [ report true ]
+  if any? other turtles-on patch-ahead 1 [ report true ]
+  if any? other turtles in-cone 2.5 60 [ report true ]
+  report false
+end
 
 ]]></code>
   <widgets>
-    <view x="368" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-23" height="615" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="615" tickCounterLabel="ticks" maxPycor="23" updateMode="0" maxPxcor="23" minPxcor="-23"></view>
-    <button x="90" y="50" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="55" display="setup">setup</button>
+    <view x="368" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-24" height="494" showTickCounter="true" patchSize="10.0" fontSize="8" wrappingAllowedY="true" width="494" tickCounterLabel="ticks" maxPycor="24" updateMode="0" maxPxcor="24" minPxcor="-24"></view>
+    <button x="80" y="20" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="55" display="go">go</button>
+    <button x="140" y="20" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="55" display="step">go</button>
+    <input x="205" multiline="false" y="15" height="60" variable="num-ubots" type="number" width="100">1.0</input>
+    <slider x="40" step="10" y="160" max="360" width="250" display="collision-turn-range" height="50" min="90" direction="Horizontal" default="180.0" variable="collision-turn-range"></slider>
+    <slider x="40" step="0.1" y="90" max="1" width="250" display="robot-speed" height="50" min="0" direction="Horizontal" default="0.9" variable="robot-speed"></slider>
+    <button x="20" y="20" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="55" display="setup">setup</button>
+    <plot x="50" autoPlotX="true" yMax="10.0" autoPlotY="true" y="260" xMin="0.0" height="175" legend="true" xMax="10.0" yMin="0.0" width="230" display="Collisions">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="pen-0" color="-7500403" legend="true">
+        <setup></setup>
+        <update>plot mean [collision-count] of turtles</update>
+      </pen>
+    </plot>
   </widgets>
   <info>## WHAT IS IT?
 
