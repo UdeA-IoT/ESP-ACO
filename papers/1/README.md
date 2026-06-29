@@ -354,15 +354,101 @@ flowchart LR
     style PLANO fill:#D35400,color:#fff
 ```
 
-> [!NOTE]
-> El sorting **no requiere** que los anillos sean físicamente más pequeños o que puedan penetrar en espacios inaccesibles a los planos. Ambos tipos llegan igual de cerca al centro. La diferencia es exclusivamente de **destino final**: los anillos se quedan donde llegan; los planos son expulsados hacia afuera.
+## 6. Experimentos
 
-> [!WARNING]
-> **Alta varianza temporal:** en 5 réplicas, el tiempo de convergencia varió entre 2h 45m y 25h 20m — casi un orden de magnitud. Esto es una firma de los sistemas estigmérgicos con múltiples atractores: el tiempo depende de qué clústeres intermedios se forman por azar. No interpretar varianza alta como inestabilidad del mecanismo.
+A continuación se presenta la lista de los diez experimentos realizados con los **U-bots** para investigar la estigmergia y la autoorganización, con una descripción breve de su propósito:
+
+*   **Experimento 1: Adecuación del tamaño de la arena:** Evaluó si el número de colisiones entre robots aumentaba de forma lineal o exponencial al incrementar la cantidad de máquinas, confirmando que la arena era lo suficientemente grande para operar con hasta 10 robots sin interferencias excesivas.
+*   **Experimento 2: Agrupamiento básico:** Buscó replicar experimentos previos de agrupamiento de objetos dispersos en un solo cúmulo central utilizando las reglas de comportamiento triviales de los nuevos U-bots.
+*   **Experimento 3: Efectos de borde algorítmicos:** Investigó cómo variar la probabilidad ($p$) de que un robot retenga o suelte un objeto al chocar con la pared cambia el resultado entre agrupamiento central o periférico (contra la pared).
+*   **Experimento 4: Efectos de borde mediados por sensores:** Intentó obtener el mismo resultado que el experimento anterior (agrupamiento periférico), pero en lugar de cambiar el código, se ajustó físicamente el ángulo y rango de los sensores infrarrojos.
+*   **Experimento 5: El algoritmo "pullback" (arrastre):** Introdujo una nueva regla donde los objetos amarillos son arrastrados hacia atrás al chocar, logrando por primera vez la segregación y clasificación de dos tipos de objetos.
+*   **Experimento 6: Variación de la distancia de arrastre:** Estudió cómo cambiar la distancia que el robot arrastra el objeto afecta la calidad de la clasificación y el tiempo necesario para completarla.
+*   **Experimento 7: Mejora del agrupamiento con el tiempo:** Analizó si permitir que el experimento durara más horas mejoraba la densidad de los objetos que formaban el "halo" exterior en la clasificación anular.
+*   **Experimento 8: Agrupamiento en ausencia de núcleos:** Probó si los objetos que son arrastrados podían formar un cúmulo por sí solos sin la presencia de objetos "fijos" que sirvieran como ancla espacial.
+*   **Experimento 9: Segregación ignorando objetos:** Intentó lograr la separación de colores programando a los robots para que soltaran inmediatamente un tipo de objeto, confiando en el movimiento aleatorio para la segregación.
+*   **Experimento 10: Algoritmo de arrastre aleatorio:** Aplicó la regla de arrastrar objetos de forma aleatoria a ambos colores (en lugar de solo a uno) para ver si el sistema aún era capaz de formar cúmulos densos.
+
+### Experimento 1 - Adecuacion del tamaño de la arena
+
+Tuvo como objetivo principal evaluar las características intrínsecas de los robots al operar en el entorno de pruebas para asegurar que el sistema fuera viable para experimentos colectivos.
+
+Para el desarrollo del experimiento, los investigadores se basaron en observaciones previas (de Beckers et al.), quienes habían notado que aumentar el número de robots provocaba un incremento exponencial de colisiones, lo que deterioraba drásticamente el rendimiento. Para verificar esto en su propio sistema implementaron:
+
+*   **Automatización:** A diferencia de estudios anteriores que usaban observación manual, cada U-bot fue programado para **registrar automáticamente** el número de colisiones que experimentaba tanto con otros robots como con los límites de la arena.
+*   **Condiciones:** Se realizaron pruebas con grupos de **1 a 13 robots** durante periodos de 20 minutos bajo dos escenarios: una arena vacía y una arena con un cúmulo central de 22 frisbees.
+*   **Resultados:** Los datos mostraron que la tasa de aumento de las colisiones era **baja y aproximadamente constante** en ambas condiciones.
+
+![exp1](images/fig7_exp1.png)
+
+>[!important]
+> **Principal conclusión**
+> 
+> La conclusión fundamental fue que el sistema opera bajo un **régimen lineal y no exponencial** en cuanto al número de colisiones. 
+> 
+> Esto permitió determinar que los resultados de los experimentos posteriores (que utilizaron hasta **10 robots**) podrían interpretarse de forma fiable, ya que las interacciones físicas directas entre las máquinas no generarían interferencias lo suficientemente graves como para arruinar el proceso de autoorganización estigmérgica.
+
+### Experimento 2 -  Agrupamiento básico
+
+El **Experimento 2** tuvo como objetivo principal verificar si el nuevo diseño de los **U-bots** y sus pinzas, utilizando un algoritmo simplificado, podían replicar los resultados de agrupamiento obtenidos en investigaciones previas.
+
+A continuación se detallan los aspectos clave de este experimento:
+
+1. **Configuración Inicial**:
+   *   **Elementos:** Se colocaron **44 frisbees** (22 negros y 22 con un anillo blanco) distribuidos de manera uniforme y regular por toda la arena.
+   *   **Agentes:** Se liberaron **10 robots** programados para tratar ambos tipos de frisbees de la misma manera.
+   *   **Criterio de éxito:** Se definió que el experimento finalizaría cuando el **90% de los objetos** (40 frisbees) formaran un único cúmulo, donde cada miembro estuviera a menos de un diámetro de distancia de otro.
+
+2. **Reglas de Comportamiento**: Los robots operaron bajo tres reglas simples de prioridad descendente:
+   *   **Regla 1 (Evitar obstáculos):** Si la pinza detecta presión y hay un objeto detectado adelante (pared o robot), el robot realiza un **giro aleatorio** para alejarse. Gracias a las barbelas, mantiene el frisbee que lleva durante el giro.
+   *   **Regla 2 (Soltar objetos):** Si la pinza detecta presión (al chocar con un segundo frisbee) pero **no hay un obstáculo** detectado adelante, el robot retrocede una pequeña distancia y gira. Esto provoca que el frisbee se quede en ese lugar.
+   *   **Regla 3 (Explorar):** Si ninguna de las condiciones anteriores se cumple, el robot simplemente **avanza en línea recta**.
+   
+   El diagrama mostrado anteriormente resume las reglas:
+
+   ```mermaid
+   flowchart TD
+    %% Estilos de los nodos
+    classDef condition fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
+    classDef action fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef default fill:#fff,stroke:#333,stroke-width:1px
+
+    Inicio([Inicio de evaluación de sensores]) --> Cond1
+
+    %% Regla 1
+    Cond1{"¿Gripper presionado <br> AND <br> Objeto al frente?"}:::condition
+    Cond1 -- "Sí (Cumple Regla 1)" --> Act1["Hacer un giro aleatorio <br> alejándose del objeto"]:::action
+    
+    %% Regla 2
+    Cond1 -- "No" --> Cond2{"¿Gripper presionado <br> AND <br> NO hay objeto al frente?"}:::condition
+    Cond2 -- "Sí (Cumple Regla 2)" --> Act2["Retroceder una pequeña distancia <br> y hacer giro aleatorio (izq/der)"]:::action
+    
+    %% Regla 3 (Por defecto si nada de lo anterior se cumple)
+    Cond2 -- "No (Cumple Regla 3)" --> Act3["Avanzar hacia adelante"]:::action
+    
+    %% Flujo continuo
+    Act1 --> Fin([Fin del ciclo])
+    Act2 --> Fin
+    Act3 --> Fin
+   ```
+
+3. **Resultados y Observaciones**
+   *   **Proceso de formación:** Los objetos primero se agregaron en pequeños cúmulos, que luego se fusionaron en estructuras más grandes.
+   *   **Tiempo de ejecución:** El sistema alcanzó el objetivo de formar un único cúmulo de 40 frisbees después de **8 horas y 25 minutos**.
+   *   **Dificultades detectadas:** Los investigadores notaron que, en las fases intermedias, a los robots les resultaba difícil "robar" frisbees de los cúmulos ya formados. Esto se debía a que la geometría de los cúmulos hacía que casi cualquier impacto activara la Regla 2 (soltar), en lugar de permitir que el robot se llevara un objeto individual.
+
+![exp2](images/fig7_exp2.png)
+
+> [!important]
+> **Concluiones**
+> 
+> La conclusión principal de este experimento fue que el proceso de agrupamiento es robusto y se comporta de manera idéntica a experimentos anteriores, validando que el nuevo sistema robótico era apto para estudios de **autoorganización estigmergica**.
+
 
 ---
 
-## 6. Por qué los robots físicos revelan más que las simulaciones abstractas
+
+## 7. Por qué los robots físicos revelan más que las simulaciones abstractas
 
 > [!TIP]
 > **Principio central:** la estigmergia es una *explotación de la física mediante el comportamiento*. A física más rica, más simple puede ser el comportamiento.
@@ -457,6 +543,13 @@ En terminos de Estigmergia en teminos humanos, un ejemplo puede verse en el Manu
 | **ARGoS3** | Desktop (Linux/Mac) | Física real, swarms de cientos de robots, modelos e-puck/foot-bot | Muy alta — el simulador más usado en literatura de swarm con estigmergia | [github.com/ilpincy/argos3](https://github.com/ilpincy/argos3) |
 | **Webots** | Desktop (multiplataforma) | Física completa, robots reales modelados, comportamiento colectivo | Alta — útil para validar comportamiento cercano a hardware real | [cyberbotics.com](https://cyberbotics.com) |
 | **NetLogo desktop** | Desktop (Java) | Agent-based modeling general, modelos de hormigas, clustering, sorting | Alta — plataforma sobre la que se construyeron simulaciones del linaje Deneubourg | [ccl.northwestern.edu/netlogo](https://ccl.northwestern.edu/netlogo/) |
+
+### Simuladores de robotica espacial
+
+* https://vr.vex.com/
+* https://mblock.cc/
+* https://root.samlabs.com/
+* https://arcade.makecode.com/
 
 ## Repos
 
