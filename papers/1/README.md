@@ -327,7 +327,7 @@ flowchart TD
 flowchart LR
     subgraph ROBOT["Robot se aproxima al clúster"]
         direction TB
-        R1["Trayectoria aleatoria\nsiempre desde FUERA\n→ componente hacia el centro"]
+        R1["Trayectoria aleatoria\nsiempre desde FUERA\n→ componente hacia \nel centro"]
     end
 
     subgraph ANILLO["Si carga ANILLO"]
