@@ -218,7 +218,7 @@ end
     </chooser>
     <button x="30" y="310" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="55" display="Go">go</button>
     <button x="100" y="310" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="55" display="Step">step-once</button>
-    <switch x="225" y="10" height="40" on="true" variable="dirty-A" width="71" display="dirty-A"></switch>
+    <switch x="225" y="10" height="40" on="false" variable="dirty-A" width="71" display="dirty-A"></switch>
     <switch x="225" y="55" height="40" on="true" variable="dirty-B" width="70" display="dirty-B"></switch>
     <monitor x="15" precision="17" y="125" height="60" fontSize="11" width="100" display="Status A">status-A</monitor>
     <monitor x="130" precision="17" y="125" height="60" fontSize="11" width="100" display="Status B">status-B</monitor>
