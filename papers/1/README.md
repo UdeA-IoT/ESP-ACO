@@ -240,10 +240,48 @@ Los autores definen cuatro tipos básicos de ordenamiento de objetos:
 
 ### Metodología Experimental
 
-**Agentes (U-bots)**: Robots de 23 cm de diámetro con tracción diferencial, sensores infrarrojos y una pinza diseñada para manipular "frisbees".
+* **Agentes (U-bots)**: Robots de 23 cm de diámetro con tracción diferencial, sensores infrarrojos y una pinza diseñada para manipular "frisbees".
 
   ![ubot](images/fig1_ubot.png)
   
+  A continuación se presenta una tabla detallada con las características técnicas y mecánicas del **U-bot**:
+  
+   | Característica | Detalles Técnicos |
+   | :--- | :--- |
+   | **Size (Tamaño)** | Diámetro de **23 cm**; lo suficientemente pequeño para ser portátil, pero con espacio para diversos sensores como ultrasonic (ultrasónicos), IR (infrarrojos) y CCD video cameras (cámaras de video CCD). |
+   | **Manoeuvrability (Maniobrabilidad)** | Posee **Differential drive (tracción diferencial)** y motores potentes con high-resolution optical quadrature encoders (codificadores ópticos de cuadratura de alta resolución); permite **turning on the spot (girar sobre el eje)**, reversing (retroceder) y un control preciso de la velocidad. |
+   | **Endurance (Resistencia/Autonomía)** | Aproximadamente **3 horas** de funcionamiento continuo bajo condiciones de aceleración y desaceleración frecuente. |
+   | **Computational Power (Potencia computacional)** | Procesador **Motorola 68332** con una capacidad de memoria de hasta **16 Mb**. |
+   | **Reliability (Fiabilidad)** | **Chassis (chasis)** de aluminio mecanizado de precisión que soporta las cargas estructurales; **gearboxes (cajas de cambios)** protegidas por un torque-limiting clutch (embrague limitador de par). |
+   | **Infra-red sensors (Sensores infrarrojos)** | Cuatro proximity sensors (sensores de proximidad) configurados a unos 20 cm: tres orientados hacia adelante y uno hacia atrás. |
+   | **Gripper (Pinza)** | Mecanismo frontal de 8 cm diseñado para sentir, sujetar, retener y soltar frisbees (discos). |
+   | **Weighted barbels (Barbelas con contrapeso)** | Dos piezas móviles que caen dentro del disco para retenerlo físicamente (retention) cuando el robot gira, evitando que se salga lateralmente. |
+   | **Color sensing (Detección de color)** | Un optical sensor (sensor óptico) de reflexión dentro de la pinza que identifica si el disco es amarillo o rojo/negro. |
+   | **Retractable pin (Pasador retráctil)** | Pasador trasero accionado por un motor eléctrico; cuando se baja, permite el **pullback (arrastre hacia atrás)** del disco. |
+   | **Tactile feedback (Retroalimentación táctil)** | El gripper (pinza) está suspendido y conectado a un **microswitch (microinterruptor)** que se activa cuando la fuerza de empuje supera un umbral (detecta dos o más frisbees). |
+   | **Flexibility (Flexibilidad)** | Incluye extra power rails (rieles de alimentación adicionales), puertos de entrada/salida multiplexados y A/D conversion (conversión analógico-digital) para añadir sensores futuros. |
+   
+   En lo que reapecta a las operaciones que realiza un **U-bot** con los frisbees y su entorno para lograr la coordinación estigmérgica se pueden resumir en la siguiente lista:
+   
+   * **Operaciones de Movimiento y Navegación**
+     *   **Avanzar (Go forward):** Es la acción por defecto (Regla 3) que permite al robot explorar la arena en línea recta hasta encontrar un objeto o un obstáculo.
+     *   **Giro aleatorio (Random turn):** Cuando el robot encuentra un obstáculo (otra máquina o la pared) o decide soltar un frisbee, realiza un giro en un ángulo aleatorio para cambiar su trayectoria.
+     *   **Retroceder (Reverse):** El robot retrocede distancias variables según la tarea: una distancia pequeña para soltar un objeto o una distancia específica mayor durante el algoritmo de arrastre.
+
+   * **Operaciones de Manipulación (Pinza/Gripper)**
+     *   **Capturar (Grip):** El robot se mueve hacia un frisbee y este encaja de forma pasiva en la parte semicircular de la pinza.
+     *   **Retener (Retain):** Gracias a las **barbelas (barbels)** con contrapeso, el robot puede mantener el frisbee dentro de la pinza incluso mientras realiza giros sobre su propio eje.
+     *   **Soltar (Release):** Al retroceder con el pasador (pin) levantado, el borde del frisbee empuja las barbelas hacia adelante y el objeto se queda en su lugar.
+    *   **Arrastrar (Pullback):** Esta operación es clave para la clasificación y consiste en:
+        1.  **Bajar el pasador (Lower pin):** Un motor eléctrico baja un pin que engancha el borde interno del frisbee.
+        2.  **Retroceder una distancia fija:** El robot arrastra el frisbee hacia atrás (por ejemplo, 2.6 o 5.2 diámetros de disco).
+        3.  **Subir el pasador (Raise pin):** Se libera el enganche para dejar el frisbee en la nueva posición.
+
+   * **Operaciones de Detección y Sensado**
+     *   **Detectar color (Color sensing):** Un sensor óptico de reflexión identifica si el frisbee capturado es amarillo ("plain") o rojo/negro ("ring").
+     *   **Detectar obstáculos:** Utiliza sensores infrarrojos para identificar paredes o robots adelante (y atrás durante el retroceso).
+     *   **Detectar densidad (Tactile feedback):** A través de un microinterruptor en la pinza suspendida, el robot detecta si está empujando más de un frisbee (lo que activa la regla de soltar el objeto).
+     *   **Registrar colisiones:** En experimentos de control, los robots fueron programados para contar automáticamente sus impactos con otros agentes o límites.
 
 * **Entorno**: Una arena octogonal de gran tamaño (lados de 4m) con una cámara cenital para el seguimiento
 
