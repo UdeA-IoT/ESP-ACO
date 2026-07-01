@@ -1,105 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model version="NetLogo 7.0.4" snapToGrid="true">
-  <code><![CDATA[extensions [ py ]
+  <code>
+extensions [ py ]
 
-globals [
-  valor-potenciometro  ; última lectura numérica recibida del ESP32
-  led-encendido?       ; estado booleano del LED controlado por el ESP32
-  puerto-serial        ; nombre del puerto, p.ej. "COM7"
-  baudrate-serial      ; velocidad requerida por el ESP32
-]
-
-;; ==========================================================
-;; 1. CONEXIÓN: arranca la sesión de Python y abre el puerto
-;; ==========================================================
-to setup-conexion
-  clear-all
-  reset-ticks
-  set led-encendido? false
-  set puerto-serial "COM7"
-  set baudrate-serial 9600
-
-  py:setup "C:/Users/usuario/anaconda3/python.exe"
-
+to test-python-serial
+  ; Reemplaza esta ruta por la ruta real de tu python de Anaconda.
+  ; La encuentras corriendo en Anaconda Prompt: where python
+  py:setup "C:/Users/Usuario/anaconda3/python.exe"
   py:run "import serial"
+  py:run "print('pyserial disponible, version:', serial.__version__)"
+end
 
+to abrir-puerto
   py:run (word
-    "ser = serial.Serial('" puerto-serial "', " baudrate-serial ", timeout=0)\n"
+    "import serial\n"
+    "ser = serial.Serial('COM1', 9600, timeout=0)\n"
     "print('Puerto abierto:', ser.name)"
   )
-
-  ; Buffer persistente + función que solo entrega líneas completas
-  py:run (word
-    "rx_buffer = ''\n"
-    "def leer_ultima():\n"
-    "    global rx_buffer\n"
-    "    if ser.in_waiting > 0:\n"
-    "        rx_buffer += ser.read(ser.in_waiting).decode('utf-8', errors='ignore')\n"
-    "    ultima = ''\n"
-    "    while '\\n' in rx_buffer:\n"
-    "        linea, rx_buffer = rx_buffer.split('\\n', 1)\n"
-    "        linea = linea.strip()\n"
-    "        if linea != '':\n"
-    "            ultima = linea\n"
-    "    return ultima"
-  )
-
-  print "Conexión establecida con el ESP32 via pyserial."
 end
 
-;; ==========================================================
-;; 2. LECTURA: reporter no bloqueante
-;; ==========================================================
-to-report leer-arduino
-  report py:runresult "leer_ultima()"
-end
-
-;; ==========================================================
-;; 3. BUCLE PRINCIPAL (botón forever 'go')
-;; ==========================================================
-to go
-  let lectura leer-arduino
-
-  if lectura != "" [
-    print (word "Lectura del Hardware: " lectura)
-
-    let valor 0
-    carefully [
-      set valor read-from-string lectura
-    ] [
-      set valor "no-numero"
-    ]
-
-    if is-number? valor [
-      set valor-potenciometro valor
-      ask turtles [
-        set size 1 + (valor-potenciometro / 1000)
-      ]
-    ]
-  ]
-
-  wait 0.5
-  tick
-end
-
-;; ==========================================================
-;; 4. ESCRITURA: alternar LED
-;; ==========================================================
-to alternar-led
-  set led-encendido? not led-encendido?
-
-  ifelse led-encendido? [
-    py:run "ser.write(b'1')"
-    print "Señal enviada: Encender LED"
-  ] [
-    py:run "ser.write(b'0')"
-    print "Señal enviada: Apagar LED"
-  ]
-end
-
-;; ==========================================================
-;; 5. DESCONEXIÓN SEGURA
-;; ==========================================================
 to cerrar-puerto
   py:run (word
     "if 'ser' in globals() and ser.is_open:\n"
@@ -108,14 +27,9 @@ to cerrar-puerto
     "else:\n"
     "    print('No habia ningun puerto abierto.')"
   )
-end]]></code>
+end</code>
   <widgets>
     <view x="368" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="434" tickCounterLabel="ticks" maxPycor="16" updateMode="0" maxPxcor="16" minPxcor="-16"></view>
-    <button x="70" y="80" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="110" display="Iniciar Lectura">go</button>
-    <button x="70" y="130" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="120" display="Alternar LED (Pin 2)">alternar-led</button>
-    <button x="195" y="30" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="85" display="Desconectar">cerrar-puerto</button>
-    <monitor x="65" precision="17" y="185" height="60" fontSize="11" width="100" display="Valor Potenciómetro">valor-potenciometro</monitor>
-    <button x="70" y="30" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="100" display="Conectar ESP32">setup-conexion</button>
   </widgets>
   <info>## WHAT IS IT?
 
