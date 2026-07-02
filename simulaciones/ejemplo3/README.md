@@ -1,4 +1,6 @@
-# Conexio serial empleando netlogo
+![Built with AI](https://img.shields.io/badge/Built%20with-AI-blue.svg)
+
+# Conexion serial empleando netlogo
 
 A continuación se muestra un ejemplo el cual se lleva a cabo la conexión serial entre un ESP32 y una interfaz sencilla de Netlogo empleando el modulo pyserial# Conexión serial entre NetLogo y ESP32 usando pyserial
 
@@ -411,3 +413,7 @@ end
 - Documentación de la extensión `py` de NetLogo: [https://ccl.northwestern.edu/netlogo/docs/py.html](https://ccl.northwestern.edu/netlogo/docs/py.html)
 - Documentación de `pyserial`: [https://pyserial.readthedocs.io/](https://pyserial.readthedocs.io/)
 - Documentación de PlatformIO para Espressif32: [https://docs.platformio.org/en/latest/boards/index.html#espressif-32](https://docs.platformio.org/en/latest/boards/index.html#espressif-32)
+
+
+> [!important]
+> Este material fue desarrollado con apoyo de herramientas de IA como asistente de redacción y estructuración. El contenido ha sido supervisado, validado y refinado por intervención humana para garantizar su precisión técnica y coherencia pedagógica. No obstante, pueden haber errores.

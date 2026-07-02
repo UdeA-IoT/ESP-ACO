@@ -1,3 +1,5 @@
+![Built with AI](https://img.shields.io/badge/Built%20with-AI-blue.svg)
+
 # Ejemplo 4 
 
 Hacer que el microcontrolador remplace el agente de netlogo de modo que lo que este hace. Sea realizado por la ESP32.
@@ -36,3 +38,7 @@ Inicialmente necesito adaptar el agente de modo que:
    
 
 El objetivo de la ESP32 sera imitar lo que hace el agente enviando comandos seriales para moverlo en la interfaz de netlogo. 
+
+
+> [!important]
+> Este material fue desarrollado con apoyo de herramientas de IA como asistente de redacción y estructuración. El contenido ha sido supervisado, validado y refinado por intervención humana para garantizar su precisión técnica y coherencia pedagógica. No obstante, pueden haber errores.

@@ -1,3 +1,5 @@
+![Built with AI](https://img.shields.io/badge/Built%20with-AI-blue.svg)
+
 # Construcción de un mundo en NetLogo
 
 ## Características
@@ -67,3 +69,6 @@ El centro de la celda $i$ se calcula como:
 * **NetLogo Dictionary:** Referencia de sintaxis y primitivas. [https://ccl.northwestern.edu/netlogo/docs/dictionary.html](https://www.google.com/search?q=https://ccl.northwestern.edu/netlogo/docs/dictionary.html)
 * **Wilensky, U., & Rand, W. (2015).** *An Introduction to Agent-Based Modeling*. MIT Press.
 * **NetLogo Models Library:** Ejemplos de referencia integrados en el software.
+
+> [!important]
+> Este material fue desarrollado con apoyo de herramientas de IA como asistente de redacción y estructuración. El contenido ha sido supervisado, validado y refinado por intervención humana para garantizar su precisión técnica y coherencia pedagógica. No obstante, pueden haber errores.
