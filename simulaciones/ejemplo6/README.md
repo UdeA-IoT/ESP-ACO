@@ -441,7 +441,22 @@ abre el puerto y establece la sesión, `Go`/`Step` intercambian
 percepto/acción tick a tick, y `Desconectar` envía `EXIT` y cierra el
 puerto.
 
-![NetLogo operando contra el ESP32 físico: mundo de 5 celdas con el agente en la celda 3, y el Command Center registrando la conexión por COM7](agente-mundo2-ESP32.png)
+El primer hito de la integración es el acoplamiento exitoso: NetLogo abre el
+puerto físico y establece la sesión con el agente embebido.
+
+![Acoplamiento exitoso ESP32↔NetLogo: el Command Center confirma puerto abierto en COM7, Setup enviado y conexión establecida con el agente](netlogo-ESP32.png)
+
+En esta captura, el Command Center confirma la secuencia de enganche:
+`Puerto abierto: COM7`, `Setup enviado: N=5 celda_inicial=1` y `Conexion
+establecida con el agente`. Es el momento en que el ESP32 físico queda
+efectivamente acoplado al mundo simulado —el objetivo central de la fase—,
+con el agente (figura roja) ya situado en su celda dentro del mundo de cinco
+celdas.
+
+Una sesión completa, incluyendo su cierre ordenado, se observa en el
+siguiente registro:
+
+![NetLogo operando contra el ESP32 físico: mundo de 5 celdas con el agente en la celda 3, y el Command Center registrando la sesión completa por COM7 hasta la desconexión](agente-mundo2-ESP32.png)
 
 En la captura, el Command Center registra la secuencia real de una sesión:
 `Puerto abierto: COM7`, `Setup enviado: N=5 celda_inicial=1`, `Conexion
