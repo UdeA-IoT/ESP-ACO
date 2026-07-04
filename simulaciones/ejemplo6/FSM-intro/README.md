@@ -392,6 +392,7 @@ al esqueleto, y cada añadido corresponde a un concepto ya visto en este
 documento.
 
 ```mermaid
+
 stateDiagram-v2
     [*] --> BOOT
     BOOT --> WAITING_SETUP : automático (una vez)
@@ -399,8 +400,8 @@ stateDiagram-v2
     RUNNING --> FINISH : llega "EXIT"
     RUNNING --> WAITING_SETUP : reset (interrupción)
     FINISH --> WAITING_SETUP : reset (botón)
-    note right of RUNNING : lee percepto por serial\ny responde acción
-    note left of FINISH : estado terminal:\nsolo sale por reset
+    note right of RUNNING : lee percepto por serial y responde acción
+    note left of FINISH : estado terminal, solo sale por reset
 ```
 
 ### Evolución 1: de transición automática a transición por entrada
