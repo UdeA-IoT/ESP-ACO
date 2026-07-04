@@ -461,6 +461,6 @@ basados en modelo por el lado de la IA— convergen en la misma variable.
 - Digikey — *How to Program an Arduino Finite State Machine*
   https://www.digikey.com/en/maker/tutorials/2023/how-to-program-an-arduino-finite-state-machine
 - Valvano, J. — *Embedded Systems: Introduction to ARM Cortex-M Microcontrollers*
-  (capítulos sobre máquinas de estado finito: Moore, Mealy, tablas de estado)
+  (capítulos sobre máquinas de estado finito: Moore, Mealy, tablas de estado) [[link]](https://users.ece.utexas.edu/~valvano/arm/msp432.htm)
 - Proyecto Wokwi — *fsm-hello-world*
   https://wokwi.com/projects/468484978648176641
