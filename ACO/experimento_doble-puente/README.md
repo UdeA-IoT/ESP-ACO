@@ -1,9 +1,5 @@
 # Deducción del modelo de Deneubourg — puente doble
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/USUARIO/REPO/blob/main/NOMBRE_NOTEBOOK.ipynb)
-
-> Reemplaza `USUARIO/REPO/NOMBRE_NOTEBOOK` en el badge de arriba (y en el propio notebook) por la ruta real una vez este repositorio esté publicado en GitHub.
-
 ## Qué contiene
 
 Este repositorio incluye un Jupyter Notebook (`deneubourg_puente_doble.ipynb`) que resume, de forma pedagógica y reproducible, el proceso completo de deducción del modelo probabilístico de Deneubourg, Aron, Goss & Pasteels (1990) para el experimento del puente doble — el origen biológico del algoritmo de optimización por colonia de hormigas (ACO).
@@ -45,3 +41,4 @@ Solo es necesario actualizar `USUARIO/REPO/NOMBRE_NOTEBOOK` con la ruta real una
 ## Material relacionado
 
 - `estabilidad_puntos_fijos.md` — guía de ejercicios de práctica sobre estabilidad de puntos fijos (con respuestas), cuyas soluciones se verifican simbólicamente en la sección 5 de este notebook.
+- https://imada.sdu.dk/u/marco/Teaching/AY2016-2017/DM841/
