@@ -182,12 +182,12 @@ $p(1,2)$, $p(1,3)$, $p(2,3)$: existe el nodo intermedio 3.
 
 **Ecuación (1.4) — regla de decisión (sin offset).**
 
-$$
-p_{is}(t)=\frac{[\tau_{is}(t)]^{\alpha}}{[\tau_{is}(t)]^{\alpha}+[\tau_{il}(t)]^{\alpha}},
-\qquad
-p_{il}(t)=\frac{[\tau_{il}(t)]^{\alpha}}{[\tau_{is}(t)]^{\alpha}+[\tau_{il}(t)]^{\alpha}}
-\tag{1.4}
-$$
+```math
+\begin{aligned}
+p_{is}(t)&=\frac{[\tau_{is}(t)]^{\alpha}}{[\tau_{is}(t)]^{\alpha}+[\tau_{il}(t)]^{\alpha}}\\[1ex]
+p_{il}(t)&=\frac{[\tau_{il}(t)]^{\alpha}}{[\tau_{is}(t)]^{\alpha}+[\tau_{il}(t)]^{\alpha}}
+\end{aligned}
+```
 
 Es la misma estructura de (1.1) —pesos $[\tau_{ia}]^{\alpha}$ normalizados, con
 $p_{is}+p_{il}=1$— **pero sin el offset $t_s$**. ¿Por qué podemos quitarlo? En (1.1) el
@@ -202,13 +202,12 @@ que el denominador nunca se anula y el offset deja de ser necesario.
 
 **Ecuación (1.5) — actualización de la rama corta.**
 
-$$
+```math
 \tau_{is}(t)=\underbrace{\tau_{is}(t-1)}_{\text{acumulado (sin evaporación)}}
 +\underbrace{p_{is}(t-1)\,m_i(t-1)}_{\text{salen de } i}
 +\underbrace{p_{js}(t-1)\,m_j(t-1)}_{\text{salen de } j},
 \quad (i=1,j=2;\ i=2,j=1)
-\tag{1.5}
-$$
+```
 
 Término a término:
 
@@ -223,13 +222,12 @@ Los dos términos de aporte llevan el **mismo retardo 1**: es la clave de la sim
 
 **Ecuación (1.6) — actualización de la rama larga.**
 
-$$
+```math
 \tau_{il}(t)=\tau_{il}(t-1)
 +\underbrace{p_{il}(t-1)\,m_i(t-1)}_{\text{salen de } i,\ \text{retardo }1}
 +\underbrace{p_{jl}(t-r)\,m_j(t-r)}_{\text{llegan de } j,\ \text{retardo }r},
 \quad (i=1,j=2;\ i=2,j=1)
-\tag{1.6}
-$$
+```
 
 Aquí está la sutileza de los retardos $1$ vs $r$. Recordando la lectura de la EDO (1.3),
 $d\tau_{il}/dt=c\,p_{il}(t)+c\,p_{jl}(t-r\,t_s)$, hay un término **instantáneo** y uno
@@ -250,12 +248,11 @@ opuesto. En la rama corta ambos retardos coinciden (el tiempo de cruce vale 1), 
 
 **Ecuación (1.7) — número de hormigas en el nodo $i$.**
 
-$$
+```math
 m_i(t)=\underbrace{p_{js}(t-1)\,m_j(t-1)}_{\text{llegan por la corta}}
 +\underbrace{p_{jl}(t-r)\,m_j(t-r)}_{\text{llegan por la larga}},
 \quad (i=1,j=2;\ i=2,j=1)
-\tag{1.7}
-$$
+```
 
 Esto es **conservación de flujo**, sin feromona: toda hormiga que está en $i$ en el instante
 $t$ llegó desde $j$ por una de las dos ramas. Por la corta salieron en $t-1$ (cruce 1 paso);
@@ -391,14 +388,14 @@ $\forall (i,j)\in A$).
 
 **Ecuación (1.8) — decisión probabilística sobre el vecindario.**
 
-$$
+```math
 p_{ij}^{k}=
 \begin{cases}
 \dfrac{\tau_{ij}^{\alpha}}{\displaystyle\sum_{l\in N_i^{k}}\tau_{il}^{\alpha}}, & \text{si } j\in N_i^{k},\\[2ex]
 0, & \text{si } j\notin N_i^{k},
 \end{cases}
-\tag{1.8}
-$$
+```
+
 
 donde $N_i^{k}$ es el **vecindario de la hormiga $k$ cuando está en el nodo $i$**. Misma idea
 de normalización que (1.4), pero ahora la suma recorre los vecinos disponibles, no solo dos
@@ -432,10 +429,10 @@ Camino sin bucles: 0 - 1 - 3 - 2 - 8 - 5 - 6 - 9
 **Ecuación (1.9) — depósito (modo backward).** Al retroceder por el arco $(i,j)$, la hormiga
 $k$ aumenta la feromona:
 
-$$
+```math
 \tau_{ij}\leftarrow\tau_{ij}+\Delta\tau^{k}
-\tag{1.9}
-$$
+```
+
 
 Sobre la elección de $\Delta\tau^{k}$: en el caso más simple es una **constante** igual para
 todas las hormigas (y entonces solo la *diferencia de longitud* ayuda: la hormiga de camino
@@ -450,10 +447,9 @@ creciente de la longitud del camino** —a menor longitud, más feromona.
 **Ecuación (1.10) — evaporación.** Tras cada movimiento de la hormiga, se evapora en todos los
 arcos:
 
-$$
+```math
 \tau_{ij}\leftarrow(1-\rho)\,\tau_{ij},\qquad \forall (i,j)\in A,\quad \rho\in(0,1]
-\tag{1.10}
-$$
+```
 
 La evaporación decae la feromona con velocidad exponencial. Cumple tres funciones: es un
 **mecanismo de exploración** (evita converger rápido a un camino subóptimo), permite **olvidar
