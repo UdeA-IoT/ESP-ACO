@@ -39,10 +39,10 @@ Este documento asume como ya conocido lo tratado en tres materiales previos y **
 
 | Número | Sección origen | Contenido | Rol en este documento |
 |---|---|---|---|
-| (1.1) | §1.1.2 | Modelo estocástico continuo de Deneubourg, $p_{is}(t)$ | Referencia de fondo |
-| (1.2)–(1.3) | §1.1.2 | Dinámica con retardo temporal $t_s$ (ecuaciones diferenciales) | Referencia de fondo |
+| (1.1) | §1.1.2 | Modelo estocástico continuo de Deneubourg, `p_is(t)` | Referencia de fondo |
+| (1.2)–(1.3) | §1.1.2 | Dinámica con retardo temporal `t_s` (ecuaciones diferenciales) | Referencia de fondo |
 | (1.4)–(1.7) | §1.2 | Versión en **tiempo discreto** del modelo de Deneubourg, aún sobre el puente doble específico (grafo de la Figura 1.5b, 3 ramas) — **no** es la regla general en grafo arbitrario | Contexto; no se usa como punto de contraste directo |
-| **(1.8)** | §1.3.1 (S-ACO) | Regla de transición discreta en un **grafo arbitrario** $G=(N,A)$, solo con $\tau^\alpha$ (sin $\eta$) | **Punto de contraste directo** con la regla de decisión de §2.2.2 (Bloque 3) |
+| **(1.8)** | §1.3.1 (S-ACO) | Regla de transición discreta en un **grafo arbitrario** `G = (N,A)`, solo con `τ^α` (sin `η`) | **Punto de contraste directo** con la regla de decisión de §2.2.2 (Bloque 3) |
 
 > [!WARNING]
 > **Corrección de encaje verificada en este documento:** el material previo del proyecto refería
@@ -70,40 +70,43 @@ Este documento asume como ya conocido lo tratado en tres materiales previos y **
 
 | Etiqueta en este documento | Sección origen | Contenido | Estado de numeración |
 |---|---|---|---|
-| Definición 1 | §2.2.1 | Terna $(S,f,\Omega)$, componentes $C$, estados $X$, $\tilde{X}$ (factibilidad débil), $\tilde{S}$ | Prosa en el libro; sin número |
-| Definición 2 | §2.2.1 | Grafo de construcción $G_C=(C,L)$ | Prosa en el libro; sin número |
-| Definición 3 | §2.2.2 | Propiedades de la hormiga artificial $k$ (memoria $M^k$, estado inicial, terminación, regla de decisión) | Prosa en el libro; sin número |
+| Definición 1 | §2.2.1 | Terna `(S, f, Ω)`, componentes `C`, estados `X`, `X̃` (factibilidad débil), `S̃` | Prosa en el libro; sin número |
+| Definición 2 | §2.2.1 | Grafo de construcción `G_C = (C, L)` | Prosa en el libro; sin número |
+| Definición 3 | §2.2.2 | Propiedades de la hormiga artificial `k` (memoria `M^k`, estado inicial, terminación, regla de decisión) | Prosa en el libro; sin número |
 | Figura 2.1 | §2.2.3 | Pseudocódigo `ACOMetaheuristic` (`ScheduleActivities`: `ConstructAntsSolutions`, `UpdatePheromones`, `DaemonActions`) | Es figura, no ecuación — numeración real del libro |
 
 > [!WARNING]
-> **Préstamos del capítulo 3, no ecuaciones de §2.2 — dos casos identificados en este documento:**
->
-> 1. La fórmula de probabilidad
->    ```math
->    p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
->    ```
->    corresponde a la **ecuación (3.2)** del capítulo 3 (regla de Ant System), no a §2.2.2.
->    §2.2.2 solo exige que exista una regla función de $\tau$, $\eta$, memoria y restricciones
->    locales, sin fijar su forma funcional.
->
-> 2. La fórmula de actualización de feromona
->    ```math
->    \tau_{ij} \leftarrow (1-\rho)\tau_{ij} + \sum_{k=1}^{m} \Delta \tau_{ij}^k
->    ```
->    corresponde a la **combinación de las ecuaciones (3.3) y (3.4)** del capítulo 3, no a §2.2.3,
->    que solo describe `UpdatePheromones` en prosa (aumenta por depósito, disminuye por evaporación).
->
+> **Préstamos del capítulo 3, no ecuaciones de §2.2 — dos casos identificados en este documento.**
 > Ambas fórmulas son préstamos pedagógicos legítimos y muy utilizados —el propio libro define en
 > el capítulo 4 un `GenericPheromoneUpdate` que generaliza (3.3)–(3.4)—, pero se mantienen aquí
-> rotuladas con su origen correcto en vez de atribuírselas a §2.2.
+> rotuladas con su origen correcto en vez de atribuírselas a §2.2. Detalle de cada caso abajo.
+
+**1. La fórmula de probabilidad**
+
+```math
+p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
+```
+
+corresponde a la **ecuación (3.2)** del capítulo 3 (regla de Ant System), no a §2.2.2. §2.2.2
+solo exige que exista una regla función de $\tau$, $\eta$, memoria y restricciones locales, sin
+fijar su forma funcional.
+
+**2. La fórmula de actualización de feromona**
+
+```math
+\tau_{ij} \leftarrow (1-\rho)\tau_{ij} + \sum_{k=1}^{m} \Delta \tau_{ij}^k
+```
+
+corresponde a la **combinación de las ecuaciones (3.3) y (3.4)** del capítulo 3, no a §2.2.3,
+que solo describe `UpdatePheromones` en prosa (aumenta por depósito, disminuye por evaporación).
 
 ### Cómo se integran los seis pasos de diseño (README Q3) en este documento
 
 | Paso (Q3) | Dónde se integra aquí | Función |
 |---|---|---|
 | 1. Representar el problema | Bloque 2 (§2.2.1) | Contenido central del bloque |
-| 2. Significado de la feromona | Bloque 3 (§2.2.2) | Aclara qué decisión sesga $\tau_{ij}$ antes de la regla de decisión |
-| 3. Información heurística | Bloque 3 (§2.2.2) | Aclara el rol de $\eta_{ij}$ (estática/dinámica) junto a $\tau_{ij}$ |
+| 2. Significado de la feromona | Bloque 3 (§2.2.2) | Aclara qué decisión sesga `τ_ij` antes de la regla de decisión |
+| 3. Información heurística | Bloque 3 (§2.2.2) | Aclara el rol de `η_ij` (estática/dinámica) junto a `τ_ij` |
 | 4. Búsqueda local | Bloque 4 (§2.2.3, `DaemonActions`) | Motiva por qué `DaemonActions` existe |
 | 5. Variante ACO concreta | Fuera de este documento | Pertenece al capítulo 3 (AS/ACS/MMAS) |
 | 6. Parámetros (α, β, ρ, m) | Fuera de este documento | Ajuste fino, no representación/comportamiento/ciclo |
@@ -169,8 +172,8 @@ Una instancia de un problema de optimización combinatoria es una terna $(S, f, 
 - $\Omega$: el conjunto de **restricciones** del problema.
 
 Las soluciones de $S$ que satisfacen $\Omega$ forman el subconjunto de **soluciones
-factibles** $\tilde{S} \subseteq S$. El objetivo es encontrar $s^* \in \tilde{S}$ tal que
-$f(s^*) \leq f(s)$ para todo $s \in \tilde{S}$ (minimización). Esto es exactamente lo que
+factibles** $\tilde{S} \subseteq S$. El objetivo es encontrar $s^{\ast} \in \tilde{S}$ tal que
+$f(s^{\ast}) \leq f(s)$ para todo $s \in \tilde{S}$ (minimización). Esto es exactamente lo que
 el documento B ya formalizó con el TSP como caso paradigmático; aquí se recupera solo para
 tener la notación a mano cuando, en el Bloque 2, se muestre cómo §2.2.1 construye $C$, $X$,
 $\tilde{X}$ *sobre* esta terna.
@@ -204,7 +207,7 @@ estáticos** (el TSP: las distancias entre ciudades no cambian mientras se resue
 problema) como **problemas dinámicos** (ruteo en redes de telecomunicaciones: el costo de
 un enlace es proporcional al tráfico, que varía en tiempo real, y un nodo puede volverse
 inalcanzable súbitamente). El objetivo sigue siendo el mismo: encontrar una solución
-factible $s^*$ de costo mínimo.
+factible $s^{\ast}$ de costo mínimo.
 
 > [!NOTE]
 > Este documento, siguiendo la decisión notacional ya tomada para el proyecto, usa **τ**
@@ -236,8 +239,8 @@ x = \langle c_i, c_j, \ldots, c_h, \ldots \rangle
 - Un conjunto de **estados factibles** $\tilde{X} \subseteq X$, definido mediante una
   prueba dependiente del problema que verifica que **no es imposible** completar una
   secuencia $x \in \tilde{X}$ en una solución que satisfaga las restricciones $\Omega$.
-- Un conjunto no vacío $S^*$ de **soluciones óptimas**, con $S^* \subseteq \tilde{S}$ y
-  $S^* \subseteq S$.
+- Un conjunto no vacío $S^{\ast}$ de **soluciones óptimas**, con $S^{\ast} \subseteq \tilde{S}$ y
+  $S^{\ast} \subseteq S$.
 - Un costo $g(s,t)$ asociado a cada solución candidata $s \in S$. En la mayoría de los
   casos $g(s,t) \equiv f(s,t)$ para todo $s \in \tilde{S}$, donde $\tilde{S} \subseteq S$
   es el conjunto de **soluciones candidatas factibles**, obtenido a partir de $S$ mediante
@@ -267,7 +270,7 @@ x = \langle c_i, c_j, \ldots, c_h, \ldots \rangle
 >
 > Adicionalmente, el texto extraído del PDF presenta el símbolo de tilde con ambigüedad
 > tipográfica en dos puntos (en la oración sobre la "completación" de $x$, y en la
-> definición de $S^*$). Interpreto ambos pasajes conforme a la lógica interna citada arriba
+> definición de $S^{\ast}$). Interpreto ambos pasajes conforme a la lógica interna citada arriba
 > —que sí es inequívoca—, y lo señalo aquí en vez de asumir silenciosamente una lectura.
 > Esta distinción, como anota el propio README, se vuelve directamente relevante si más
 > adelante se profundiza en las pruebas de convergencia del capítulo 4.
@@ -365,7 +368,7 @@ tener clara, porque corresponde exactamente a los **Pasos 2 y 3** del README (Q3
 tiene las siguientes propiedades, verificadas textualmente contra el libro:
 
 1. Explota el grafo de construcción $G_C = (C,L)$ para buscar soluciones óptimas
-   $s^* \in S^*$.
+   $s^{\ast} \in S^{\ast}$.
 2. Tiene una **memoria** $M^k$ que usa para almacenar información sobre el camino
    recorrido hasta el momento. La memoria sirve para: (a) construir soluciones factibles
    (implementar las restricciones $\Omega$); (b) calcular los valores heurísticos $\eta$;
@@ -393,33 +396,38 @@ tiene las siguientes propiedades, verificadas textualmente contra el libro:
 > **Préstamo del capítulo 3, reiterado con precisión.** Nótese que la propiedad 5 —tal como
 > la escribe el libro en §2.2.2— **no fija una forma funcional** para la regla de decisión.
 > Dice solo que es función de $\tau$, $\eta$, memoria y restricciones locales. La fórmula
-> concreta
-> ```math
-> p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
-> ```
-> (citada en la Respuesta 4 del README y en el mapa de ecuaciones) es la **ecuación (3.2)**
-> del capítulo 3 — la regla de Ant System —, no una ecuación de §2.2.2. Es la instanciación
-> más citada y más pedagógica, por eso se usa aquí como ilustración, pero formalmente
-> pertenece a una variante concreta, no a la metaheurística general.
+> concreta (citada en la Respuesta 4 del README y en el mapa de ecuaciones) es la
+> **ecuación (3.2)** del capítulo 3 — la regla de Ant System —, no una ecuación de §2.2.2.
+> Es la instanciación más citada y más pedagógica, por eso se usa aquí como ilustración, pero
+> formalmente pertenece a una variante concreta, no a la metaheurística general:
+
+```math
+p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
+```
 
 ### 3.3 Contraste con la regla de transición del capítulo 1
 
 El contraste correcto (ver corrección de numeración en el mapa de ecuaciones al inicio) es
 entre la propiedad 5 de §2.2.2 y la **ecuación (1.8)** de S-ACO (§1.3.1):
 
+Ecuación (1.8), en dos casos:
+
 ```math
-p_{ij}^k = \begin{cases} \dfrac{\tau_{ij}^\alpha}{\sum_{l \in \mathcal{N}_i^k} \tau_{il}^\alpha}, & \text{si } j \in \mathcal{N}_i^k \\[4pt] 0, & \text{si } j \notin \mathcal{N}_i^k \end{cases}
-\tag{1.8}
+p_{ij}^k = \frac{\tau_{ij}^\alpha}{\sum_{l \in \mathcal{N}_i^k} \tau_{il}^\alpha} \qquad \text{si } j \in \mathcal{N}_i^k
+```
+
+```math
+p_{ij}^k = 0 \qquad \text{si } j \notin \mathcal{N}_i^k
 ```
 
 Comparando ambas:
 
 | Aspecto | S-ACO, ec. (1.8) — cap. 1 | §2.2.2 — cap. 2 (general) |
 |---|---|---|
-| Información usada | Solo $\tau$ (pheromone), exponente $\alpha$ | $\tau$ **y** $\eta$ (heurística), en general con exponentes $\alpha$, $\beta$ — aunque §2.2.2 no fija la forma exacta |
-| Vecindad $\mathcal{N}_i^k$ | Todos los nodos conectados a $i$ en $G=(N,A)$, excepto el predecesor inmediato (para evitar retroceder) | Vecindad factible sobre $G_C=(C,L)$, filtrada por las restricciones $\Omega$ del problema — no hay noción de "predecesor prohibido" per se |
-| Grafo subyacente | $G=(N,A)$: el grafo *físico* del problema de camino mínimo | $G_C=(C,L)$: grafo de construcción *siempre completo*, abstracto |
-| Rol de $\eta$ | Ausente — S-ACO no usa información heurística | Presente como pieza formal del marco, opcional en la práctica según el problema |
+| Información usada | Solo `τ` (pheromone), exponente `α` | `τ` **y** `η` (heurística), en general con exponentes `α`, `β` — aunque §2.2.2 no fija la forma exacta |
+| Vecindad `N_i^k` | Todos los nodos conectados a `i` en `G = (N,A)`, excepto el predecesor inmediato (para evitar retroceder) | Vecindad factible sobre `G_C = (C,L)`, filtrada por las restricciones `Ω` del problema — no hay noción de "predecesor prohibido" per se |
+| Grafo subyacente | `G = (N,A)`: el grafo *físico* del problema de camino mínimo | `G_C = (C,L)`: grafo de construcción *siempre completo*, abstracto |
+| Rol de `η` | Ausente — S-ACO no usa información heurística | Presente como pieza formal del marco, opcional en la práctica según el problema |
 
 > [!IMPORTANT]
 > **Honestidad de encaje.** La generalización de (1.8) a la propiedad 5 de §2.2.2 no es
@@ -572,6 +580,7 @@ capítulo 1", pero que sí lo es si se compara con precisión.
 ## 5. Cierre
 
 ### 5.1 Glosario de símbolos
+
 
 | Símbolo | Significado | Introducido en |
 |---|---|---|
