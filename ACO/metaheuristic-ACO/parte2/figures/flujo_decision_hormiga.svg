@@ -1,0 +1,79 @@
+<svg viewBox="0 0 760 900" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="760" height="900" fill="#ffffff"/>
+
+  <text x="380" y="32" text-anchor="middle" font-size="17" font-weight="600" fill="#222">
+    Flujo de decisión de la hormiga artificial — §2.2.2
+  </text>
+
+  <!-- 1. Estado actual -->
+  <rect x="230" y="60" width="300" height="55" rx="10" fill="#e8f0fe" stroke="#3b5bab" stroke-width="1.5"/>
+  <text x="380" y="83" text-anchor="middle" font-size="13" font-weight="600" fill="#20305c">Estado actual x_r = &#10216;x_(r-1), i&#10217;</text>
+  <text x="380" y="101" text-anchor="middle" font-size="11.5" fill="#20305c">memoria M^k consultada</text>
+
+  <line x1="380" y1="115" x2="380" y2="150" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+
+  <!-- 2. Vecindad factible -->
+  <rect x="200" y="150" width="360" height="65" rx="10" fill="#fff2cc" stroke="#9c7a1e" stroke-width="1.5"/>
+  <text x="380" y="176" text-anchor="middle" font-size="13" font-weight="600" fill="#5c4813">Vecindad factible N_i^k(x_r)</text>
+  <text x="380" y="195" text-anchor="middle" font-size="11.5" fill="#5c4813">filtrada por &#937; vía memoria M^k o valores &#951; (§2.2.1 / §2.2.2)</text>
+
+  <line x1="380" y1="215" x2="380" y2="250" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+
+  <!-- 3. Lectura local tau eta -->
+  <rect x="150" y="250" width="460" height="70" rx="10" fill="#e6f4ea" stroke="#2f7a43" stroke-width="1.5"/>
+  <text x="380" y="277" text-anchor="middle" font-size="13" font-weight="600" fill="#1e4d2b">Lectura local de &#964; (feromona) y &#951; (heurística)</text>
+  <text x="380" y="296" text-anchor="middle" font-size="11.5" fill="#1e4d2b">Paso 2 README: significado de &#964;  |  Paso 3 README: &#951; estática / dinámica</text>
+  <text x="380" y="312" text-anchor="middle" font-size="11" fill="#1e4d2b" font-style="italic">asociados a componentes/conexiones en N_i^k</text>
+
+  <line x1="380" y1="320" x2="380" y2="355" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+
+  <!-- 4. Regla de decision -->
+  <rect x="150" y="355" width="460" height="85" rx="10" fill="#fdecea" stroke="#b3382c" stroke-width="1.5"/>
+  <text x="380" y="380" text-anchor="middle" font-size="13" font-weight="600" fill="#7a231a">Regla de decisión probabilística p_ij^k</text>
+  <text x="380" y="398" text-anchor="middle" font-size="11.5" fill="#7a231a">función de: &#964;,&#951; locales · memoria M^k · restricciones &#937;</text>
+  <text x="380" y="416" text-anchor="middle" font-size="10.5" fill="#7a231a" font-style="italic">forma concreta (ec. 3.2, cap. 3) NO fijada por §2.2.2 — ver honestidad de encaje</text>
+  <text x="380" y="432" text-anchor="middle" font-size="10.5" fill="#7a231a" font-style="italic">normalización: &#931;_j p_ij^k = 1 (Bloque 1 §1.2)</text>
+
+  <line x1="380" y1="440" x2="380" y2="475" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+
+  <!-- 5. Moverse a j -->
+  <rect x="230" y="475" width="300" height="55" rx="10" fill="#e8f0fe" stroke="#3b5bab" stroke-width="1.5"/>
+  <text x="380" y="498" text-anchor="middle" font-size="13" font-weight="600" fill="#20305c">Se mueve a j &#8712; N_i^k</text>
+  <text x="380" y="517" text-anchor="middle" font-size="11.5" fill="#20305c">nuevo estado &#10216;x_r, j&#10217; &#8712; X</text>
+
+  <line x1="380" y1="530" x2="380" y2="565" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+
+  <!-- 6. Actualiza tau opcional -->
+  <rect x="180" y="565" width="400" height="55" rx="10" fill="#f3e8fd" stroke="#7a3ba8" stroke-width="1.5"/>
+  <text x="380" y="588" text-anchor="middle" font-size="13" font-weight="600" fill="#4a2166">Actualiza &#964; del componente/conexión usado</text>
+  <text x="380" y="606" text-anchor="middle" font-size="11.5" fill="#4a2166">(opcional en este paso — propiedad 6, §2.2.2)</text>
+
+  <line x1="380" y1="620" x2="380" y2="655" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+
+  <!-- 7. Decision diamante -->
+  <polygon points="380,655 520,715 380,775 240,715" fill="#fff" stroke="#333" stroke-width="1.6"/>
+  <text x="380" y="708" text-anchor="middle" font-size="12" font-weight="600" fill="#222">¿Se cumple alguna</text>
+  <text x="380" y="724" text-anchor="middle" font-size="12" font-weight="600" fill="#222">condición e^k?</text>
+
+  <!-- No: loop back -->
+  <line x1="240" y1="715" x2="80" y2="715" stroke="#555" stroke-width="1.6"/>
+  <line x1="80" y1="715" x2="80" y2="182" stroke="#555" stroke-width="1.6"/>
+  <line x1="80" y1="182" x2="196" y2="182" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+  <text x="90" y="450" font-size="12" fill="#555" font-weight="600">No</text>
+  <text x="60" y="440" font-size="11" fill="#555" transform="rotate(-90 60 440)">siguiente paso de construcción</text>
+
+  <!-- Si: detener -->
+  <line x1="380" y1="775" x2="380" y2="810" stroke="#555" stroke-width="1.6" marker-end="url(#arrow2)"/>
+  <text x="400" y="795" font-size="12" fill="#555" font-weight="600">Sí</text>
+
+  <rect x="180" y="810" width="400" height="70" rx="10" fill="#e6f4ea" stroke="#2f7a43" stroke-width="1.5"/>
+  <text x="380" y="835" text-anchor="middle" font-size="13" font-weight="600" fill="#1e4d2b">La hormiga se detiene</text>
+  <text x="380" y="853" text-anchor="middle" font-size="11.5" fill="#1e4d2b">retraza el camino hacia atrás y actualiza</text>
+  <text x="380" y="869" text-anchor="middle" font-size="11.5" fill="#1e4d2b">&#964; de los componentes usados (propiedad 7)</text>
+</svg>

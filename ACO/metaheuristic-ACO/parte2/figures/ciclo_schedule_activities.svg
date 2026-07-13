@@ -1,0 +1,69 @@
+<svg viewBox="0 0 880 620" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrowdash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7a3ba8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="880" height="620" fill="#ffffff"/>
+
+  <text x="440" y="32" text-anchor="middle" font-size="17" font-weight="600" fill="#222">
+    ScheduleActivities — el ciclo de la metaheurística ACO (§2.2.3, Figura 2.1)
+  </text>
+
+  <!-- Contenedor ScheduleActivities -->
+  <rect x="40" y="60" width="800" height="430" rx="14" fill="#fafafa" stroke="#888" stroke-width="1.4" stroke-dasharray="6,4"/>
+  <text x="60" y="88" font-size="13" font-weight="600" fill="#555">ScheduleActivities</text>
+  <text x="60" y="106" font-size="10.5" fill="#777" font-style="italic">no fija orden ni sincronización — decisión del diseñador (Bloque 1 §1.4)</text>
+
+  <!-- ConstructAntsSolutions -->
+  <rect x="80" y="140" width="220" height="130" rx="10" fill="#e8f0fe" stroke="#3b5bab" stroke-width="1.6"/>
+  <text x="190" y="168" text-anchor="middle" font-size="14" font-weight="600" fill="#20305c">ConstructAnts</text>
+  <text x="190" y="186" text-anchor="middle" font-size="14" font-weight="600" fill="#20305c">Solutions</text>
+  <text x="190" y="212" text-anchor="middle" font-size="11" fill="#20305c">colonia concurrente y</text>
+  <text x="190" y="228" text-anchor="middle" font-size="11" fill="#20305c">asíncrona sobre G_C</text>
+  <text x="190" y="248" text-anchor="middle" font-size="10.5" fill="#20305c" font-style="italic">usa &#964;, &#951; (§2.2.2)</text>
+
+  <!-- UpdatePheromones -->
+  <rect x="330" y="140" width="220" height="130" rx="10" fill="#e6f4ea" stroke="#2f7a43" stroke-width="1.6"/>
+  <text x="440" y="168" text-anchor="middle" font-size="14" font-weight="600" fill="#1e4d2b">UpdatePheromones</text>
+  <text x="440" y="196" text-anchor="middle" font-size="11" fill="#1e4d2b">evaporación (olvido)</text>
+  <text x="440" y="214" text-anchor="middle" font-size="11" fill="#1e4d2b">+ depósito (refuerzo)</text>
+  <text x="440" y="240" text-anchor="middle" font-size="10.5" fill="#1e4d2b" font-style="italic">fórmula concreta = préstamo</text>
+  <text x="440" y="255" text-anchor="middle" font-size="10.5" fill="#1e4d2b" font-style="italic">ecs. (3.3)-(3.5), cap. 3</text>
+
+  <!-- DaemonActions -->
+  <rect x="580" y="140" width="220" height="130" rx="10" fill="#f3e8fd" stroke="#7a3ba8" stroke-width="1.6"/>
+  <text x="690" y="168" text-anchor="middle" font-size="14" font-weight="600" fill="#4a2166">DaemonActions</text>
+  <text x="690" y="186" text-anchor="middle" font-size="10.5" fill="#4a2166" font-style="italic">(opcional)</text>
+  <text x="690" y="210" text-anchor="middle" font-size="11" fill="#4a2166">búsqueda local /</text>
+  <text x="690" y="227" text-anchor="middle" font-size="11" fill="#4a2166">info. no local</text>
+  <text x="690" y="252" text-anchor="middle" font-size="10.5" fill="#4a2166" font-style="italic">sin contraparte en S-ACO (cap. 1)</text>
+
+  <!-- Flechas de dependencia de datos (no de orden temporal fijo) -->
+  <line x1="300" y1="205" x2="326" y2="205" stroke="#555" stroke-width="1.6" marker-end="url(#arrow3)"/>
+  <text x="313" y="192" text-anchor="middle" font-size="10" fill="#555">soluciones</text>
+  <text x="313" y="228" text-anchor="middle" font-size="10" fill="#555">evaluadas</text>
+
+  <path d="M 690 140 C 690 100, 460 100, 440 136" fill="none" stroke="#7a3ba8" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowdash)"/>
+  <text x="565" y="95" text-anchor="middle" font-size="10" fill="#7a3ba8">feromona adicional</text>
+  <text x="565" y="108" text-anchor="middle" font-size="10" fill="#7a3ba8">(p. ej. best-so-far ant)</text>
+
+  <path d="M 190 270 C 190 340, 690 340, 690 274" fill="none" stroke="#7a3ba8" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrowdash)"/>
+  <text x="440" y="358" text-anchor="middle" font-size="10" fill="#7a3ba8">observa caminos de TODAS las hormigas (info. no local)</text>
+
+  <!-- Nota: sin orden fijo -->
+  <rect x="80" y="400" width="720" height="70" rx="8" fill="#fdecea" stroke="#b3382c" stroke-width="1.3"/>
+  <text x="95" y="423" font-size="11.5" font-weight="600" fill="#7a231a">El libro NO especifica el orden de ejecución de estas tres actividades:</text>
+  <text x="95" y="442" font-size="11" fill="#7a231a">pueden ser paralelas e independientes, o sincronizadas — es una decisión de diseño de cada</text>
+  <text x="95" y="458" font-size="11" fill="#7a231a">implementación concreta, según el problema (estático/dinámico, centralizado/distribuido).</text>
+
+  <!-- Pseudocodigo resumido abajo -->
+  <text x="440" y="520" text-anchor="middle" font-size="12" fill="#333" font-family="'Courier New', monospace">procedure ACOMetaheuristic</text>
+  <text x="440" y="538" text-anchor="middle" font-size="12" fill="#333" font-family="'Courier New', monospace">  ScheduleActivities { ConstructAntsSolutions · UpdatePheromones · DaemonActions }</text>
+  <text x="440" y="556" text-anchor="middle" font-size="12" fill="#333" font-family="'Courier New', monospace">end-procedure</text>
+  <text x="440" y="580" text-anchor="middle" font-size="11" fill="#777" font-style="italic">Figura 2.1 del libro — pseudocódigo completo en el bloque de texto del documento</text>
+</svg>

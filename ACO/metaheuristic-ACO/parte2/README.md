@@ -11,10 +11,11 @@ Este documento asume como ya conocido lo tratado en tres materiales previos y **
 
 1. **`modelo_estocastico_a_discreto.md`** (y su continuación sobre §1.2–§1.3) — cubre la fórmula
    de Deneubourg (1.1), la dinámica con retardo (1.2)/(1.3), y la transición discreta en grafo de
-   S-ACO (1.4)–(1.7), junto con la evaporación y el depósito ∝ 1/L^k de §1.3. Este documento parte
-   de ese punto: donde el capítulo 1 modela un problema *concreto* (puente doble, grafo simple), el
-   capítulo 2 generaliza esa maquinaria a *cualquier* problema de optimización combinatoria. Esa
-   generalización es precisamente el primer punto de honestidad de encaje que se desarrolla abajo.
+   S-ACO (1.8) (ver corrección de numeración más abajo), junto con la evaporación y el depósito
+   ∝ 1/L^k de §1.3. Este documento parte de ese punto: donde el capítulo 1 modela un problema
+   *concreto* (puente doble, grafo simple), el capítulo 2 generaliza esa maquinaria a *cualquier*
+   problema de optimización combinatoria. Esa generalización es precisamente el primer punto de
+   honestidad de encaje que se desarrolla abajo.
 
 2. **Documento sobre optimización combinatoria** — cubre el formalismo (S, S̃, S\*, f(π)), el TSP
    como caso paradigmático, la distinción heurística/metaheurística, y 2-opt como búsqueda local.
@@ -34,13 +35,22 @@ Este documento asume como ya conocido lo tratado en tres materiales previos y **
 
 ## Mapa de ecuaciones
 
-### Ecuaciones del capítulo 1 (ya establecidas, solo referenciadas aquí)
+### Ecuaciones del capítulo 1 (referenciadas aquí, no re-deducidas)
 
 | Número | Sección origen | Contenido | Rol en este documento |
 |---|---|---|---|
-| (1.1) | §1.2 | Modelo estocástico continuo de Deneubourg, $P_{is}(t)$ | Referencia de fondo; no se re-deduce |
-| (1.2)–(1.3) | §1.2 | Dinámica con retardo temporal $t_s$ | Referencia de fondo; no se re-deduce |
-| (1.4)–(1.7) | §1.3 | Transición discreta en grafo, S-ACO (forward/backward, evaporación ρ) | **Se contrasta explícitamente** en los Bloques 4 y 5, como punto de comparación con la regla de decisión y la actualización de feromona del capítulo 2 |
+| (1.1) | §1.1.2 | Modelo estocástico continuo de Deneubourg, $p_{is}(t)$ | Referencia de fondo |
+| (1.2)–(1.3) | §1.1.2 | Dinámica con retardo temporal $t_s$ (ecuaciones diferenciales) | Referencia de fondo |
+| (1.4)–(1.7) | §1.2 | Versión en **tiempo discreto** del modelo de Deneubourg, aún sobre el puente doble específico (grafo de la Figura 1.5b, 3 ramas) — **no** es la regla general en grafo arbitrario | Contexto; no se usa como punto de contraste directo |
+| **(1.8)** | §1.3.1 (S-ACO) | Regla de transición discreta en un **grafo arbitrario** $G=(N,A)$, solo con $\tau^\alpha$ (sin $\eta$) | **Punto de contraste directo** con la regla de decisión de §2.2.2 (Bloque 3) |
+
+> [!WARNING]
+> **Corrección de encaje verificada en este documento:** el material previo del proyecto refería
+> a (1.4)–(1.7) como "la transición discreta en grafo". Al verificar directamente `aco-book.pdf`
+> se confirmó que (1.4)–(1.7) modelan específicamente el puente doble en tiempo discreto (aún con
+> notación φ, comportamiento *promedio* del sistema, sin generalizar a un grafo arbitrario). La
+> regla que sí generaliza a cualquier grafo, con comportamiento estocástico *individual* por
+> hormiga, es la **ecuación (1.8)** de §1.3.1. Esta es la que se usa como contraste en el Bloque 3.
 
 ### Ecuaciones y expresiones formales de este documento (capítulo 2)
 
@@ -54,9 +64,9 @@ Este documento asume como ya conocido lo tratado en tres materiales previos y **
 > tag `(2.x)`. El capítulo 2 sí tiene ecuaciones numeradas (p. ej. la (2.8) de *Simulated Annealing*
 > en §2.4.1), pero ninguna cae dentro de §2.2.
 >
-> Por esa razón, en este documento las expresiones formales de §2.2 se rotulan como
-> **"Definición N"** (numeración propia de estas notas, no del libro) en vez de inventarles un
-> número de ecuación que el libro no les da.
+> Por esa razón, las expresiones formales de §2.2 se rotulan aquí como **"Definición N"**
+> (numeración propia de estas notas, no del libro) en vez de inventarles un número de ecuación
+> que el libro no les da.
 
 | Etiqueta en este documento | Sección origen | Contenido | Estado de numeración |
 |---|---|---|---|
@@ -66,30 +76,37 @@ Este documento asume como ya conocido lo tratado en tres materiales previos y **
 | Figura 2.1 | §2.2.3 | Pseudocódigo `ACOMetaheuristic` (`ScheduleActivities`: `ConstructAntsSolutions`, `UpdatePheromones`, `DaemonActions`) | Es figura, no ecuación — numeración real del libro |
 
 > [!WARNING]
-> **Préstamo del capítulo 3, no ecuación de §2.2:** la fórmula de probabilidad
-> ```math
-> p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
-> ```
-> que el README Q&A (Respuesta 4) presenta como formalización de §2.2.2, **corresponde en
-> realidad a la ecuación (3.2) del capítulo 3** — la *"random proportional action choice rule"*
-> de Ant System, la primera variante concreta de ACO. El libro es explícito en que esta fórmula es
-> **más específica** que el esquema general de la Figura 2.1: §2.2.2 solo exige que exista *"a
-> probabilistic decision rule [...] function of the locally available pheromone trails and
-> heuristic values"*, sin fijar su forma funcional. En este documento esa fórmula se usa igual
-> —es demasiado útil pedagógicamente para omitirla— pero **rotulada explícitamente como anticipo
-> del capítulo 3**, no como ecuación de §2.2. Esto no es una falla del README (es una síntesis
-> razonable para un lector novato); es una precisión que vale la pena dejar registrada aquí.
+> **Préstamos del capítulo 3, no ecuaciones de §2.2 — dos casos identificados en este documento:**
+>
+> 1. La fórmula de probabilidad
+>    ```math
+>    p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
+>    ```
+>    corresponde a la **ecuación (3.2)** del capítulo 3 (regla de Ant System), no a §2.2.2.
+>    §2.2.2 solo exige que exista una regla función de $\tau$, $\eta$, memoria y restricciones
+>    locales, sin fijar su forma funcional.
+>
+> 2. La fórmula de actualización de feromona
+>    ```math
+>    \tau_{ij} \leftarrow (1-\rho)\tau_{ij} + \sum_{k=1}^{m} \Delta \tau_{ij}^k
+>    ```
+>    corresponde a la **combinación de las ecuaciones (3.3) y (3.4)** del capítulo 3, no a §2.2.3,
+>    que solo describe `UpdatePheromones` en prosa (aumenta por depósito, disminuye por evaporación).
+>
+> Ambas fórmulas son préstamos pedagógicos legítimos y muy utilizados —el propio libro define en
+> el capítulo 4 un `GenericPheromoneUpdate` que generaliza (3.3)–(3.4)—, pero se mantienen aquí
+> rotuladas con su origen correcto en vez de atribuírselas a §2.2.
 
 ### Cómo se integran los seis pasos de diseño (README Q3) en este documento
 
 | Paso (Q3) | Dónde se integra aquí | Función |
 |---|---|---|
-| 1. Representar el problema | Bloque 3 (§2.2.1) | Ya es el contenido central del bloque; no se repite aparte |
-| 2. Significado de la feromona | Bloque 4 (§2.2.2) | Aclara qué decisión sesga $\tau_{ij}$ antes de presentar la regla de decisión |
-| 3. Información heurística | Bloque 4 (§2.2.2) | Aclara el rol de $\eta_{ij}$ (estática/dinámica) junto a $\tau_{ij}$ |
-| 4. Búsqueda local | Bloque 5 (§2.2.3, `DaemonActions`) | Motiva por qué `DaemonActions` existe: la búsqueda local es el ejemplo canónico de acción que ninguna hormiga puede hacer sola |
-| 5. Variante ACO concreta | **Fuera de este documento** | Pertenece al capítulo 3 (AS/ACS/MMAS); solo se menciona en la conexión hacia adelante del cierre |
-| 6. Parámetros (α, β, ρ, m) | **Fuera de este documento** | Idem — ajuste fino, no representación/comportamiento/ciclo |
+| 1. Representar el problema | Bloque 2 (§2.2.1) | Contenido central del bloque |
+| 2. Significado de la feromona | Bloque 3 (§2.2.2) | Aclara qué decisión sesga $\tau_{ij}$ antes de la regla de decisión |
+| 3. Información heurística | Bloque 3 (§2.2.2) | Aclara el rol de $\eta_{ij}$ (estática/dinámica) junto a $\tau_{ij}$ |
+| 4. Búsqueda local | Bloque 4 (§2.2.3, `DaemonActions`) | Motiva por qué `DaemonActions` existe |
+| 5. Variante ACO concreta | Fuera de este documento | Pertenece al capítulo 3 (AS/ACS/MMAS) |
+| 6. Parámetros (α, β, ρ, m) | Fuera de este documento | Ajuste fino, no representación/comportamiento/ciclo |
 
 ---
 
@@ -108,7 +125,7 @@ En ACO, el grafo relevante no es (necesariamente) el grafo del problema en sí, 
 **grafo de construcción** $G_C = (C, L)$: sus nodos son los **componentes** $C$ de una
 solución (no necesariamente "lugares" del problema original), y $L$ conecta esos
 componentes de forma que una hormiga pueda ir ensamblando una solución completa como una
-secuencia de componentes visitados. En el Bloque 3 se verá que, para el TSP, $G_C$
+secuencia de componentes visitados. En el Bloque 2 se verá que, para el TSP, $G_C$
 coincide con el grafo del problema (ciudades y distancias); pero esto es un caso
 particular, no la definición general.
 
@@ -155,7 +172,7 @@ Las soluciones de $S$ que satisfacen $\Omega$ forman el subconjunto de **solucio
 factibles** $\tilde{S} \subseteq S$. El objetivo es encontrar $s^* \in \tilde{S}$ tal que
 $f(s^*) \leq f(s)$ para todo $s \in \tilde{S}$ (minimización). Esto es exactamente lo que
 el documento B ya formalizó con el TSP como caso paradigmático; aquí se recupera solo para
-tener la notación a mano cuando, en el Bloque 3, se muestre cómo §2.2.1 construye $C$, $X$,
+tener la notación a mano cuando, en el Bloque 2, se muestre cómo §2.2.1 construye $C$, $X$,
 $\tilde{X}$ *sobre* esta terna.
 
 ### 1.4 Sistemas concurrentes: agentes cuasi-independientes
@@ -167,7 +184,7 @@ compartido que sincronice sus decisiones paso a paso. Cada hormiga avanza con su
 "velocidad" de construcción, y el algoritmo no impone que todas terminen su solución al
 mismo tiempo.
 
-Esto tiene una consecuencia de diseño importante que se retomará en el Bloque 5: si las
+Esto tiene una consecuencia de diseño importante que se retomará en el Bloque 4: si las
 hormigas actúan de forma concurrente y descentralizada, **cualquier acción que requiera
 comparar o combinar información de varias hormigas a la vez no puede ser ejecutada por una
 sola hormiga** — necesita un mecanismo aparte. Ese mecanismo es, precisamente,
@@ -191,16 +208,15 @@ factible $s^*$ de costo mínimo.
 
 > [!NOTE]
 > Este documento, siguiendo la decisión notacional ya tomada para el proyecto, usa **τ**
-> para feromona. El libro, en las ecuaciones del capítulo 1 que aquí se referencian
-> (1.1)–(1.7), usa φ; se mantiene φ en esas citas textuales, entendiendo que corresponde a
-> τ en la notación adoptada aquí. No se trata de una inconsistencia del libro sino de una
-> decisión de estilo de esta serie de documentos.
+> para feromona. El libro, en las ecuaciones del capítulo 1 que aquí se referencian, usa φ;
+> se mantiene φ en esas citas textuales, entendiendo que corresponde a τ en la notación
+> adoptada aquí. No se trata de una inconsistencia del libro sino de una decisión de estilo
+> de esta serie de documentos.
 
 ### 2.2 Componentes, estados y las dos capas de factibilidad: $\tilde{X}$ vs $\tilde{S}$
 
 El libro mapea la terna $(S,f,\Omega)$ sobre una estructura más operativa, mediante la
-siguiente lista de elementos — esta es la **Definición 1** de este documento (recordatorio:
-no es una ecuación numerada del libro, ver mapa de ecuaciones del Bloque 0):
+siguiente lista de elementos — esta es la **Definición 1** de este documento:
 
 **Definición 1 (representación del problema, §2.2.1).**
 
@@ -274,18 +290,18 @@ restricción). $G_C$ se llama **grafo de construcción**, y los elementos de $L$
 
 Las restricciones $\Omega(t)$ **no se codifican en la topología de $G_C$** — $G_C$ es
 siempre completo — sino en la **política que siguen las hormigas** al recorrerlo (esto se
-desarrolla en el Bloque 3, §2.2.2). Esta elección de diseño da flexibilidad: según el
-problema, puede convenir implementar las restricciones de forma **dura** (las hormigas
-solo pueden construir soluciones factibles) o **blanda** (las hormigas pueden construir
-soluciones infactibles, es decir $s \in S \setminus \tilde{S}$, penalizadas según su grado
-de infactibilidad).
+desarrolla en el Bloque 3). Esta elección de diseño da flexibilidad: según el problema,
+puede convenir implementar las restricciones de forma **dura** (las hormigas solo pueden
+construir soluciones factibles) o **blanda** (las hormigas pueden construir soluciones
+infactibles, es decir $s \in S \setminus \tilde{S}$, penalizadas según su grado de
+infactibilidad).
 
 > [!IMPORTANT]
 > **Honestidad de encaje — del problema concreto al marco abstracto.**
 > El capítulo 1 trabajó siempre sobre un grafo *físico*: en el puente doble, los nodos eran
 > el nido y la fuente de comida, y los arcos representaban ramas reales con una longitud
-> real; en el S-ACO sobre grafo simple, las ecuaciones (1.4)–(1.7) modelaban el movimiento
-> de una hormiga sobre un grafo cuya topología *era* el problema — el costo de un arco era
+> real; en el S-ACO sobre grafo simple, la ecuación (1.8) modelaba el movimiento de una
+> hormiga sobre un grafo cuya topología *era* el problema — el costo de un arco era
 > literalmente una distancia o un tiempo de tránsito.
 >
 > En §2.2.1 ese grafo físico desaparece como requisito. $G_C$ es **siempre completo por
@@ -302,8 +318,8 @@ de infactibilidad).
 > todas: una mala elección de qué es un "componente" para el problema en cuestión no se
 > corrige después con ajuste de parámetros.
 
-En el caso particular del TSP (que se retomará con más detalle en §2.3, fuera del alcance
-de este documento), el grafo de construcción coincide con el grafo del problema: los
+En el caso particular del TSP (que se retoma con más detalle en §2.3, fuera del alcance de
+este documento), el grafo de construcción coincide con el grafo del problema: los
 componentes son las ciudades, y las conexiones llevan como peso la distancia entre ellas.
 Pero esto es una coincidencia feliz del TSP, no la regla general — para otros problemas
 (asignación, scheduling) los componentes no son "lugares" en absoluto.
@@ -340,8 +356,8 @@ tener clara, porque corresponde exactamente a los **Pasos 2 y 3** del README (Q3
 > **Paso 3 del README (información heurística):** $\eta$ puede ser **estática** (fija desde
 > el inicio, como $\eta_{ij}=1/d_{ij}$ en el TSP) o **dinámica** (recalculada en tiempo de
 > ejecución, como en AntNet). El libro es explícito en que $\eta$ es "especialmente crucial
-> cuando no hay búsqueda local disponible" — anticipo directo del Paso 4, que se retoma en
-> el Bloque 4 de este documento.
+> cuando no hay búsqueda local disponible" — anticipo directo del Paso 4, retomado en el
+> Bloque 4.
 
 ### 3.2 Las propiedades de la hormiga artificial $k$
 
@@ -381,14 +397,14 @@ tiene las siguientes propiedades, verificadas textualmente contra el libro:
 > ```math
 > p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
 > ```
-> (citada en la Respuesta 4 del README y en el mapa de ecuaciones del Bloque 0) es la
-> **ecuación (3.2)** del capítulo 3 — la regla de Ant System —, no una ecuación de §2.2.2.
-> Es la instanciación más citada y más pedagógica, por eso se usa aquí como ilustración, pero
-> formalmente pertenece a una variante concreta, no a la metaheurística general.
+> (citada en la Respuesta 4 del README y en el mapa de ecuaciones) es la **ecuación (3.2)**
+> del capítulo 3 — la regla de Ant System —, no una ecuación de §2.2.2. Es la instanciación
+> más citada y más pedagógica, por eso se usa aquí como ilustración, pero formalmente
+> pertenece a una variante concreta, no a la metaheurística general.
 
 ### 3.3 Contraste con la regla de transición del capítulo 1
 
-Con la corrección de fuente señalada al inicio de este bloque, el contraste correcto es
+El contraste correcto (ver corrección de numeración en el mapa de ecuaciones al inicio) es
 entre la propiedad 5 de §2.2.2 y la **ecuación (1.8)** de S-ACO (§1.3.1):
 
 ```math
@@ -424,10 +440,10 @@ colectiva. Esa interacción se da vía comunicación indirecta, mediada por lo q
 leen y escriben en las variables de feromona — es decir, **estigmergia**, el mismo mecanismo
 ya presentado en el capítulo 1.
 
-El libro lo resume con una frase que vale la pena citar casi literalmente por su precisión:
-es un proceso de aprendizaje distribuido en el que los agentes individuales —las hormigas—
-no son adaptativos en sí mismos, pero sí modifican adaptativamente la forma en que el
-problema es representado y percibido por las demás hormigas.
+El libro lo resume con una idea que vale la pena remarcar por su precisión: es un proceso de
+aprendizaje distribuido en el que los agentes individuales —las hormigas— no son adaptativos
+en sí mismos, pero sí modifican adaptativamente la forma en que el problema es representado y
+percibido por las demás hormigas.
 
 ![Flujo de decisión de la hormiga artificial](figures/flujo_decision_hormiga.svg)
 
@@ -489,33 +505,6 @@ individual puede ejecutar por sí sola**. El libro da dos ejemplos explícitos:
 > razón de fondo señalada en el Bloque 1 §1.4: ninguna hormiga individual tiene acceso a esa
 > información no local.
 
-> [!WARNING]
-> **Segunda corrección de encaje respecto a una fórmula del README.** La Respuesta 4 del
-> README presenta, como formalización de `UpdatePheromones`, la ecuación
-> ```math
-> \tau_{ij} \leftarrow (1-\rho)\tau_{ij} + \sum_{k=1}^{m} \Delta \tau_{ij}^k
-> ```
-> Verificado contra el libro: **§2.2.3 no contiene esta fórmula ni ninguna otra numerada**
-> — la describe únicamente en prosa, como se citó arriba (aumenta por depósito, disminuye
-> por evaporación). La fórmula con esta forma exacta es, de nuevo, una construcción del
-> capítulo 3: corresponde a la **combinación de las ecuaciones (3.3) y (3.4)** de Ant System:
-> ```math
-> \tau_{ij} \leftarrow (1-\rho)\tau_{ij}, \quad \forall (i,j) \in L \tag{3.3, evaporación}
-> ```
-> ```math
-> \tau_{ij} \leftarrow \tau_{ij} + \sum_{k=1}^{m} \Delta\tau_{ij}^k, \quad \forall (i,j) \in L \tag{3.4, depósito}
-> ```
-> con $\Delta\tau_{ij}^k = 1/C_k$ si el arco $(i,j)$ pertenece al tour $T^k$ construido por
-> la hormiga $k$, y $0$ en caso contrario (ec. 3.5) — donde $C_k$ es la longitud del tour.
->
-> Al igual que con la regla de decisión del Bloque 3, esta no es una fórmula incorrecta ni
-> inventada por el README: es una síntesis legítima y muy usada en la literatura (de hecho,
-> el propio libro define en el capítulo 4 un `GenericPheromoneUpdate` que generaliza (3.3) y
-> (3.4) para describir *todos* los esquemas de AS y sus extensiones). Pero, igual que antes,
-> pertenece formalmente al capítulo 3 (y su generalización, al capítulo 4), no a §2.2.3.
-> Este documento la mantiene como ilustración —es la instanciación más natural de
-> `UpdatePheromones`— pero rotulada con su origen correcto.
-
 ### 4.2 El pseudocódigo de la Figura 2.1
 
 Verificado textualmente:
@@ -562,16 +551,15 @@ adicional) pero sin imponer un orden temporal fijo — coherente con la adverten
 
 ### 4.3 Honestidad de encaje: `DaemonActions` no existía en S-ACO puro
 
-El capítulo 1 (S-ACO, Bloque 0/1 de la ruta de lectura) tenía solo dos mecanismos: hormigas
-que construyen soluciones (modo forward) y actualizan feromona (modo backward), más
-evaporación. **No existía ningún tercer mecanismo centralizado.** `DaemonActions` es una
-pieza que aparece *nueva* en la generalización de §2.2.3, y no es casual: en S-ACO, sobre
-un grafo físico simple con hormigas retrazando su propio camino, no había necesidad de
-comparar soluciones entre hormigas ni de aplicar optimización adicional — el efecto de
-longitud de camino diferencial, por sí solo, bastaba para el problema didáctico del puente
-doble.
+El capítulo 1 (S-ACO) tenía solo dos mecanismos: hormigas que construyen soluciones (modo
+forward) y actualizan feromona (modo backward), más evaporación. **No existía ningún tercer
+mecanismo centralizado.** `DaemonActions` es una pieza que aparece *nueva* en la
+generalización de §2.2.3, y no es casual: en S-ACO, sobre un grafo físico simple con
+hormigas retrazando su propio camino, no había necesidad de comparar soluciones entre
+hormigas ni de aplicar optimización adicional — el efecto de longitud de camino diferencial,
+por sí solo, bastaba para el problema didáctico del puente doble.
 
-Al generalizar a *cualquier* problema de optimización combinatoria (Bloque 2 §2.2), esa
+Al generalizar a *cualquier* problema de optimización combinatoria (Bloque 2), esa
 suficiencia deja de sostenerse: para instancias grandes y complejas, según el propio libro,
 casi siempre se necesita búsqueda local para alcanzar resultados competitivos (adelanto del
 Paso 4 del README, ya integrado arriba). `DaemonActions` es, entonces, la pieza formal que
@@ -587,7 +575,7 @@ capítulo 1", pero que sí lo es si se compara con precisión.
 
 | Símbolo | Significado | Introducido en |
 |---|---|---|
-| $S$ | Conjunto de soluciones candidatas | §2.1 (recordado en Bloque 1) |
+| $S$ | Conjunto de soluciones candidatas | §2.1 (Bloque 1) |
 | $\tilde{S}$ | Soluciones candidatas **factibles** ($\tilde{S} \subseteq S$), obtenidas de $S$ vía $\Omega(t)$ | §2.2.1 (Bloque 2) |
 | $S^*$ | Conjunto no vacío de soluciones **óptimas**, $S^* \subseteq \tilde{S}$ y $S^* \subseteq S$ | §2.2.1 (Bloque 2) |
 | $f(s,t)$ | Función objetivo (costo) sobre $s \in S$, posiblemente dependiente del tiempo | §2.2.1 (Bloque 2) |
@@ -600,10 +588,10 @@ capítulo 1", pero que sí lo es si se compara con precisión.
 | $x = \langle c_i,c_j,\ldots\rangle$ | Un estado: secuencia de componentes | §2.2.1 (Bloque 2) |
 | $L$ | Conjunto de **conexiones** del grafo de construcción (completo) | §2.2.1 (Bloque 2) |
 | $G_C=(C,L)$ | **Grafo de construcción** | §2.2.1 (Bloque 2) |
-| $\tau$ (τ) | **Feromona** — memoria de largo plazo; $\tau_i$ (componentes) o $\tau_{ij}$ (conexiones). Notación adoptada en este documento; el libro usa φ en las ecuaciones del capítulo 1 | §2.2.2 (Bloque 3), notación fijada en Bloque 2 §2.1 |
+| $\tau$ (τ) | **Feromona** — memoria de largo plazo; $\tau_i$ (componentes) o $\tau_{ij}$ (conexiones). Notación adoptada en este documento; el libro usa φ en las ecuaciones del capítulo 1 | §2.2.2 (Bloque 3) |
 | $\eta$ (η) | **Información heurística** — a priori o de tiempo de ejecución; $\eta_i$ o $\eta_{ij}$ | §2.2.2 (Bloque 3) |
 | $M^k$ | **Memoria** privada de la hormiga $k$ (camino recorrido, costos) | §2.2.2 (Bloque 3) |
-| $\mathcal{N}_i^k$ / $\mathcal{N}^k(x_r)$ | **Vecindad factible** de la hormiga $k$ en el nodo $i$ / estado $x_r$ | §1.3.1 (Bloque 1 §1.1) y §2.2.2 (Bloque 3) |
+| $\mathcal{N}_i^k$ / $\mathcal{N}^k(x_r)$ | **Vecindad factible** de la hormiga $k$ en el nodo $i$ / estado $x_r$ | §1.3.1 (Bloque 1) y §2.2.2 (Bloque 3) |
 | $x_s^k$ | Estado inicial de la hormiga $k$ | §2.2.2 (Bloque 3) |
 | $e^k$ | Condición(es) de terminación de la hormiga $k$ | §2.2.2 (Bloque 3) |
 | $p_{ij}^k$ | Probabilidad de que la hormiga $k$ se mueva de $i$ a $j$ | Ec. (1.8), cap. 1; ec. (3.2), cap. 3 — ver honestidad de encaje, Bloque 3 |
@@ -626,7 +614,7 @@ capítulo 1", pero que sí lo es si se compara con precisión.
 - Deneubourg, J.-L. et al. (1990); Goss, S. et al. (1989). Experimentos del puente doble y
   modelo estocástico — citados por Dorigo & Stützle (2004) en el capítulo 1, base de la
   ec. (1.1).
-- Documentos previos del proyecto ESP-ACO (ver Ruta de lectura, Bloque 0):
+- Documentos previos del proyecto ESP-ACO (ver Ruta de lectura, al inicio):
   `modelo_estocastico_a_discreto.md` y su continuación §1.2/§1.3; documento de optimización
   combinatoria (formalismo $(S,f,\Omega)$, TSP, 2-opt); README Q&A (hilo narrativo).
 
@@ -645,9 +633,9 @@ estudio, en orden de cercanía:
    formalmente las ecuaciones que aquí se usaron como préstamos pedagógicos — la regla de
    decisión (3.2) de Ant System, y las reglas de actualización de feromona (3.3)–(3.5) y sus
    extensiones (Elitist AS, Rank-based AS, MAX-MIN AS, Ant Colony System). Retomar el
-   capítulo 3 cerraría el ciclo abierto por las dos advertencias de honestidad de este
-   documento (Bloques 3 y 4): se vería exactamente cómo el esquema general de la Figura 2.1
-   se concreta en un algoritmo ejecutable.
+   capítulo 3 cerraría el ciclo abierto por las advertencias de honestidad de este documento
+   (Bloques 2–4): se vería exactamente cómo el esquema general de la Figura 2.1 se concreta
+   en un algoritmo ejecutable.
 
 3. **Despliegue en ESP32 (proyecto ESP-ACO)**: la correspondencia entre el marco formal y la
    arquitectura de hardware ya en desarrollo es directa —`ConstructAntsSolutions` mapea a la
@@ -660,8 +648,8 @@ estudio, en orden de cercanía:
 
 > [!TIP]
 > Antes de avanzar a cualquiera de estas tres líneas, recomiendo una revisión rápida de las
-> **cuatro advertencias de honestidad de encaje** señaladas en este documento (Bloques 2, 3 y
-> 4), porque las tres tocan directamente material del capítulo 3: la distinción $\tilde X$
-> vs $\tilde S$, el origen real de la fórmula $p_{ij}^k$, el origen real de la fórmula de
-> actualización de feromona, y la ausencia de `DaemonActions` en S-ACO.
-
+> **advertencias de honestidad de encaje** señaladas en este documento (mapa de ecuaciones,
+> y Bloques 2, 3 y 4), porque varias tocan directamente material del capítulo 3: la
+> distinción $\tilde X$ vs $\tilde S$, el origen real de la fórmula $p_{ij}^k$, el origen
+> real de la fórmula de actualización de feromona, la corrección de (1.4)–(1.7) vs (1.8), y
+> la ausencia de `DaemonActions` en S-ACO.
