@@ -64,8 +64,6 @@ Aplica los pasos mencionados en la parte general de la metaheuristica al caso AC
 
 ### Respuesta 3
 
-### Respuesta 3
-
 Para aplicar el marco general de las metaheurísticas al caso específico de la Optimización por Colonia de Hormigas (ACO), el libro de Dorigo & Stützle (2004) ofrece una guía explícita de **seis tareas de diseño** (Sección 5.7.8, *"Steps to Solve a Problem by ACO"*), que se complementa con la definición formal de la metaheurística (§2.2.3) y con la evidencia experimental sobre el número de hormigas (§1.3.2, §5.7.6).
 
 > **Dos advertencias del propio libro antes de leer los pasos:**
@@ -160,28 +158,6 @@ flowchart TD
 
 > Los pasos 1-4 (azul) son los más determinantes del resultado final; los pasos 5-6 (amarillo) son ajustes que no compensan un mal diseño en los primeros cuatro.
 
-
-```mermaid
-flowchart LR
-    A["<b>Paso 1</b><br/>Representar<br/>el problema"]
-    B["<b>Paso 2</b><br/>Definir<br/>feromona tau_rs"]
-    C["<b>Paso 3</b><br/>Info.<br/>heurística eta_rs"]
-    D["<b>Paso 4</b><br/>Búsqueda<br/>local"]
-    E["<b>Paso 5</b><br/>Elegir<br/>variante ACO"]
-    F["<b>Paso 6</b><br/>Sintonizar<br/>parámetros"]
-
-    A --> B --> C --> D --> E --> F
-    F -.->|revisión iterativa| A
-
-    classDef critico fill:#dbe4f5,stroke:#333,stroke-width:1px
-    classDef ajuste fill:#fdf1cf,stroke:#333,stroke-width:1px
-
-    class A,B,C,D critico
-    class E,F ajuste
-```
-
-> **Azul (pasos 1-4):** determinantes del resultado final. **Amarillo (pasos 5-6):** ajuste fino — no compensa errores cometidos en los primeros cuatro.
-> 
 ---
 
 #### Tabla resumen final
@@ -195,3 +171,85 @@ flowchart LR
 | 5. Variante ACO | ¿Qué algoritmo concreto se usa? | AS / ACS / MMAS | Regla de actualización de feromona elegida | Importante |
 | 6. Parámetros | ¿Cómo se equilibra exploración/explotación? | α, β, ρ, m | m > 1 mejora robustez incluso sin depender del efecto de longitud diferencial | Ajuste fino (no corrige errores de los pasos 1–4) |
 
+## Pregunta 4
+
+Empieza a juntar las cosas desde el planteamiento a la definicion de la metaheuristica de las ACO.
+
+## Respuesta 4
+
+### Cronología de la Optimización por Colonia de Hormigas (ACO)
+
+Esta es la crónica definitiva de la **Optimización por Colonia de Hormigas (ACO)**, que recorre el camino desde la observación de la naturaleza hasta la arquitectura de un marco algorítmico formal diseñado para resolver problemas de optimización combinatoria de alta complejidad.
+
+---
+
+#### I. El Origen Biológico: Estigmergia y el Doble Puente
+
+La historia comienza con la observación de sociedades de insectos sociales como sistemas distribuidos que, a pesar de la sencillez de sus individuos, presentan una organización social altamente estructurada. El concepto clave es la **estigmergia**, una forma de comunicación indirecta mediada por modificaciones del entorno.
+
+En el **experimento del doble puente**, se observó que una colonia de hormigas (*Iridomyrmex humilis*) puede encontrar el camino más corto entre su nido y una fuente de comida. Inicialmente, las hormigas eligen ramas al azar; sin embargo, aquellas que toman la rama corta regresan más rápido, reforzando el rastro de **feromona** antes que las demás. Este proceso genera un **efecto de longitud de camino diferencial**, donde una retroalimentación positiva (autocatálisis) lleva a la colonia a converger casi totalmente hacia la ruta óptima.
+
+#### II. El Modelo Matemático: La Fórmula de Deneubourg
+
+Para describir esta dinámica, Deneubourg y sus colegas propusieron un modelo estocástico que define la probabilidad $P_{is}(t)$ de que una hormiga en un punto de decisión $i$ elija la **rama corta** ($s$) en el instante $t$:
+
+```math
+P_{is}(t) = \frac{(t_s + \phi_{is}(t))^\alpha}{(t_s + \phi_{is}(t))^\alpha + (t_s + \phi_{il}(t))^\alpha}
+```
+
+Donde:
+- **$t_s$**: Es el retraso temporal físico que representa el tiempo para atravesar la rama.
+- **$\phi_{is}(t)$**: Es la cantidad de feromona acumulada, proporcional al número de hormigas que han usado esa rama.
+- **$\alpha$**: Es un parámetro de no linealidad (fijado en 2 para hormigas reales) que amplifica las diferencias para forzar la convergencia.
+
+#### III. Hacia las Hormigas Artificiales: El Algoritmo S-ACO
+
+El salto a la computación requirió transformar este comportamiento en agentes capaces de moverse en un **grafo**. Sin embargo, surgió un problema crítico: **los bucles (loops)**. En grafos complejos, las hormigas pueden quedar atrapadas en ciclos que se refuerzan a sí mismos si depositan feromona mientras avanzan.
+
+Para solucionar esto, se desarrolló el algoritmo didáctico **Simple-ACO (S-ACO)**, dotando a las hormigas de capacidades extendidas:
+
+1. **Memoria ($M^k$):** Almacenan el camino recorrido y el costo de los enlaces.
+2. **Modos de Trabajo:** Las hormigas avanzan en modo *forward* sin depositar feromona para evitar bucles. Al llegar al destino, eliminan los ciclos de su memoria y regresan en modo *backward* reforzando solo el camino limpio.
+3. **Evaporación ($\rho$):** Se introduce un mecanismo de "olvido" que reduce la feromona en todos los arcos $\tau_{ij} \leftarrow (1 - \rho)\tau_{ij}$, esencial para permitir la exploración de nuevas rutas y evitar la convergencia prematura.
+
+#### IV. La Consagración: El Marco Formal de la Metaheurística (Secciones 2.2.1 - 2.2.3)
+
+Finalmente, el ACO se formalizó como una metaheurística aplicable a cualquier problema de optimización combinatoria definido por una terna $(S, f, \Omega)$, donde $S$ es el conjunto de soluciones, $f$ la función objetivo y $\Omega$ las restricciones.
+
+##### 1. Representación del Problema (Sec. 2.2.1)
+
+El problema se mapea sobre un **grafo de construcción** $G_C = (C, L)$:
+
+- **Componentes ($C$):** Un conjunto finito $C = \{c_1, c_2, \dots, c_{N_C}\}$.
+- **Estados ($X$):** Definidos como secuencias de componentes $x = \langle c_i, c_j, \dots, c_h \rangle$. El conjunto de soluciones factibles $\tilde{S}$ es un subconjunto de estas secuencias que satisfacen las restricciones $\Omega$.
+
+> **Nota de precisión:** el libro en realidad define el proceso en dos etapas, no en una sola. Primero define un conjunto de **estados factibles** $\tilde{X}$, mediante una prueba dependiente del problema que verifica que *no es imposible* completar la secuencia en una solución que satisfaga las restricciones — el propio libro llama a esto una factibilidad "débil", porque no garantiza que exista una completación válida. Solo después, a partir de $\tilde{X}$, se deriva el conjunto de **soluciones candidatas factibles** $\tilde{S}$. Esta distinción entre estados parciales factibles ($\tilde{X}$) y soluciones completas factibles ($\tilde{S}$) se simplifica aquí en un solo paso, lo cual es razonable para una introducción, pero se vuelve relevante si se profundiza en las pruebas de convergencia del capítulo 4.
+
+##### 2. Comportamiento de las Hormigas (Sec. 2.2.2)
+
+Cada hormiga $k$ es un procedimiento estocástico que construye soluciones mediante un **camino aleatorio** en $G_C$. En cada paso, aplica una **regla de decisión probabilística** para elegir el siguiente componente $j$ de su vecindad factible $\mathcal{N}_i^k$:
+
+```math
+p_{ij}^k = \frac{[\tau_{ij}]^\alpha [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_i^k} [\tau_{il}]^\alpha [\eta_{il}]^\beta}
+```
+
+Donde $\tau_{ij}$ es la feromona (memoria a largo plazo) y $\eta_{ij}$ es la información heurística (pista local *a priori*).
+
+##### 3. El Ciclo de la Metaheurística (Sec. 2.2.3)
+
+La metaheurística se describe como la interacción de tres procedimientos bajo el constructor `ScheduleActivities`:
+
+- **`ConstructAntsSolutions`:** Las hormigas construyen soluciones de forma concurrente y asíncrona.
+- **`UpdatePheromones`:** Modifica los rastros mediante evaporación y refuerzo, con **todas las $m$ hormigas de la colonia** depositando feromona en proporción a la calidad de su propia solución:
+
+```math
+\tau_{ij} \leftarrow (1 - \rho)\tau_{ij} + \sum_{k=1}^{m} \Delta \tau_{ij}^k
+```
+
+  Donde la cantidad depositada $\Delta \tau^k$ es una función de la **calidad de la solución** (ej. $1/L_k$, el inverso de la longitud del recorrido de la hormiga $k$).
+
+- **`DaemonActions` (Opcional):** Implementa acciones centralizadas como la **búsqueda local** (ej. algoritmos 2-opt o 3-opt) para refinar las soluciones antes de actualizar la feromona.
+
+### Conclusión
+
+El ACO es hoy un sistema de **aprendizaje distribuido** donde la inteligencia no reside en los agentes individuales, sino en la adaptación colectiva del entorno (feromonas), permitiendo resolver problemas **NP-hard** de forma eficiente.
